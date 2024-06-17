@@ -1,0 +1,105 @@
+@keyframes loading-stick {
+  12% {
+    scale: 1.1;
+  }
+  25% {
+    scale: 1;
+  }
+}
+$animatio-duration: 0.8s;
+.loading-window {
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(128, 128, 128, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.loading-window.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.loading-window__content {
+  background-color: white;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  .loading-window__loading-bar {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    .loading-bar__stick {
+      width: 90%;
+      height: 10px;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      animation: $animatio-duration loading-stick ease infinite;
+      .loading-bar__stick-visible {
+        border: 1px solid black;
+        width: 25%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        transform-origin: center;
+      }
+    }
+    .loading-bar__stick:nth-child(2) {
+      rotate: 30deg;
+      animation-delay: calc($animatio-duration * (1 / 12));
+    }
+    .loading-bar__stick:nth-child(3) {
+      rotate: 60deg;
+      animation-delay: calc($animatio-duration * (2 / 12));
+    }
+    .loading-bar__stick:nth-child(4) {
+      rotate: 90deg;
+      animation-delay: calc($animatio-duration * (3 / 12));
+    }
+    .loading-bar__stick:nth-child(5) {
+      rotate: 120deg;
+      animation-delay: calc($animatio-duration * (4 / 12));
+    }
+    .loading-bar__stick:nth-child(6) {
+      rotate: 150deg;
+      animation-delay: calc($animatio-duration * (5 / 12));
+    }
+    .loading-bar__stick:nth-child(7) {
+      rotate: 180deg;
+      animation-delay: calc($animatio-duration * (6 / 12));
+    }
+    .loading-bar__stick:nth-child(8) {
+      rotate: 210deg;
+      animation-delay: calc($animatio-duration * (7 / 12));
+    }
+    .loading-bar__stick:nth-child(9) {
+      rotate: 240deg;
+      animation-delay: calc($animatio-duration * (8 / 12));
+    }
+    .loading-bar__stick:nth-child(10) {
+      rotate: 270deg;
+      animation-delay: calc($animatio-duration * (9 / 12));
+    }
+    .loading-bar__stick:nth-child(11) {
+      rotate: 300deg;
+      animation-delay: calc($animatio-duration * (10 / 12));
+    }
+    .loading-bar__stick:nth-child(12) {
+      rotate: 330deg;
+      animation-delay: calc($animatio-duration * (11 / 12));
+    }
+  }
+}

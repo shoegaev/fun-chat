@@ -40,6 +40,7 @@ module.exports = {
     ],
     "operator-linebreak": ["error", "after"],
     "@typescript-eslint/quotes": ["error", "double"],
+    "max-lines-per-function": ["error", 50],
   },
   ignorePatterns: ["*config.js", "*eslintrc.js", "*config.ts"],
 };
