@@ -1,22 +1,28 @@
 import { ElementParametrs } from "../util/element-creator";
-import { LoadingWindowView } from "./loading-window-view/loading-window-view";
+import { LoginPageView } from "./login-page-view/login-page-view";
+import { Connection } from "../connection/connection";
 import { View } from "../util/view";
 
-export class AppView extends View {
-  public loadingWindowView: LoadingWindowView;
+type InnerViews = [LoginPageView];
 
-  constructor() {
+export class AppView extends View {
+  private loginPageView: LoginPageView;
+
+  constructor(connection: Connection) {
     const APP_CONTAINER_PARAMS: ElementParametrs = {
       tag: "div",
       cssClasses: ["main-container"],
     };
     super(APP_CONTAINER_PARAMS);
-    [this.loadingWindowView] = this.createInnerViews();
+    [this.loginPageView] = this.createInnerViews(connection);
   }
 
-  private createInnerViews(): [LoadingWindowView] {
-    const loadingWindow = new LoadingWindowView();
-    this.getHtmlElement().append(loadingWindow.getHtmlElement());
-    return [loadingWindow];
+  private createInnerViews(connection: Connection): InnerViews {
+    const loginPage = new LoginPageView(connection);
+    const arr: InnerViews = [loginPage];
+    arr.forEach((view) => {
+      this.getHtmlElement().append(view.getHtmlElement());
+    });
+    return arr;
   }
 }

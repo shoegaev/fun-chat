@@ -17,10 +17,10 @@ export class App {
   }
 
   private createComponents(): [State, Connection, AppView, Router] {
-    const view = new AppView();
-    document.body.append(view.getHtmlElement());
     const state = new State();
-    const connection = new Connection(state, view.loadingWindowView);
+    const connection = new Connection(state);
+    const view = new AppView(connection);
+    document.body.append(view.getHtmlElement());
     const router = new Router();
     return [state, connection, view, router];
   }

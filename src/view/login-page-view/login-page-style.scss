@@ -1,0 +1,22 @@
+@import "../../variables.scss";
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-page__form {
+  background-color: $color-interfaceBackground;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  margin-top: 100px;
+  border: 1px solid $color-interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+}
+.form__inputs-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

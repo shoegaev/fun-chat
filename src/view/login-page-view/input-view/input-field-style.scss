@@ -1,0 +1,61 @@
+@import "../../../variables.scss";
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.input-field__label {
+  width: 100%;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 0.4fr 0.9fr 0.2fr;
+  text-align: center;
+}
+.input-field__criteria {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 2px;
+}
+.input-field__criterium {
+  display: grid;
+  width: 100%;
+  gap: 5px;
+  grid-template-columns: 0.4fr 0.9fr 0.2fr;
+  .criterium__dot {
+    text-align: center;
+    transition: opacity 0.2s ease;
+  }
+  .criterium__text {
+    transition: opacity 0.2s ease;
+  }
+  .criterium__status {
+    justify-self: center;
+    border: $border-interfaceBorder;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    border-radius: $interfaceBorderRadius;
+  }
+  .criterium__status-tick {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+}
+.input-field__criterium_passed {
+  .criterium__text {
+    opacity: 0.3;
+  }
+  .criterium__dot {
+    opacity: 0.3;
+  }
+  .criterium__status-tick {
+    opacity: 1;
+  }
+}

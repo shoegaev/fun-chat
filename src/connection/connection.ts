@@ -1,5 +1,5 @@
 import { State } from "../state/state";
-import { LoadingWindowView } from "../view/loading-window-view/loading-window-view";
+import { LoadingWindowView } from "./loading-window-view/loading-window-view";
 const SERVER_URL = "ws://127.0.0.1:4000";
 
 export class Connection {
@@ -11,11 +11,17 @@ export class Connection {
 
   private attempt: number;
 
-  constructor(state: State, loadingWindow: LoadingWindowView) {
+  constructor(state: State) {
     this.state = state;
     this.socket = null;
-    this.loadingWindow = loadingWindow;
+    this.loadingWindow = this.createLoadingWindow();
     this.attempt = 1;
+  }
+
+  private createLoadingWindow(): LoadingWindowView {
+    const loadingWindow = new LoadingWindowView();
+    document.body.append(loadingWindow.getHtmlElement());
+    return loadingWindow;
   }
 
   public startConnection(): void {
@@ -25,8 +31,10 @@ export class Connection {
     }
     socket.addEventListener("open", () => {
       this.attempt = 1;
-      this.loadingWindow.hide();
       this.socket = socket;
+      setTimeout(() => {
+        this.loadingWindow.hide();
+      }, 300);
     });
     socket.addEventListener("error", () => {
       setTimeout(() => {
