@@ -5,6 +5,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
+    "prettier",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -38,7 +39,6 @@ module.exports = {
         props: false,
       },
     ],
-    "operator-linebreak": ["error", "after"],
     "@typescript-eslint/quotes": ["error", "double"],
     "max-lines-per-function": ["error", 50],
   },

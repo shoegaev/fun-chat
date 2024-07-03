@@ -1,21 +1,30 @@
 import { State } from "../state/state";
 import { LoadingWindowView } from "./loading-window-view/loading-window-view";
+import { Sender } from "./sender/sender";
+import { Receiver } from "./receiver/receiver";
+import { ServerMessage, ServerCallbacks } from "./types/connection-types";
 const SERVER_URL = "ws://127.0.0.1:4000";
 
 export class Connection {
   private state: State;
 
-  private socket: WebSocket | null;
+  private socketArr: WebSocket[];
 
   private loadingWindow: LoadingWindowView;
 
-  private attempt: number;
+  private connectionAttempt: number;
 
-  constructor(state: State) {
+  public sender: Sender;
+
+  private receiver: Receiver;
+
+  constructor(state: State, serverCallbacks: ServerCallbacks) {
     this.state = state;
-    this.socket = null;
+    this.socketArr = [];
     this.loadingWindow = this.createLoadingWindow();
-    this.attempt = 1;
+    this.connectionAttempt = 1;
+    this.sender = new Sender(this.socketArr);
+    this.receiver = new Receiver(this.socketArr, serverCallbacks);
   }
 
   private createLoadingWindow(): LoadingWindowView {
@@ -26,25 +35,33 @@ export class Connection {
 
   public startConnection(): void {
     const socket = new WebSocket(SERVER_URL);
-    if (this.attempt === 1) {
+    if (this.connectionAttempt === 1) {
       this.loadingWindow.show();
     }
     socket.addEventListener("open", () => {
-      this.attempt = 1;
-      this.socket = socket;
+      this.connectionAttempt = 1;
+      this.socketArr[0] = socket;
+      this.configureSocket(socket);
       setTimeout(() => {
         this.loadingWindow.hide();
       }, 300);
     });
     socket.addEventListener("error", () => {
       setTimeout(() => {
-        this.attempt += 1;
-        if (this.attempt <= 6) {
+        this.connectionAttempt += 1;
+        if (this.connectionAttempt <= 6) {
           this.startConnection();
         } else {
           // some error handling logic
         }
       }, 500);
+    });
+  }
+
+  private configureSocket(socket: WebSocket): void {
+    socket.addEventListener("message", (event) => {
+      const data: ServerMessage = JSON.parse(event.data);
+      this.receiver.handleResponse(data);
     });
   }
 }

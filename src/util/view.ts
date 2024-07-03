@@ -1,6 +1,6 @@
 import { ElementCreator, ElementParametrs } from "./element-creator";
 
-export class View {
+export abstract class View {
   viewCreator: ElementCreator;
 
   constructor(param: ElementParametrs) {

@@ -1,8 +1,8 @@
-import { View } from "../../../util/view";
+import { View } from "../../../../util/view";
 import {
   ElementCreator,
   ElementParametrs,
-} from "../../../util/element-creator";
+} from "../../../../util/element-creator";
 import "./input-field-style.scss";
 import tickIcon from "./tick-icon.svg";
 
@@ -143,5 +143,14 @@ export class InputFieldView extends View {
       }
     }
     return true;
+  }
+
+  public getValue(): string {
+    const value = this.input?.value;
+    if (value) {
+      return value;
+    } else {
+      return "";
+    }
   }
 }

@@ -1,6 +1,6 @@
-import { View } from "../../util/view";
-import { ElementParametrs } from "../../util/element-creator";
-import { Connection } from "../../connection/connection";
+import { View } from "../../../util/view";
+import { ElementParametrs } from "../../../util/element-creator";
+import { Connection } from "../../../connection/connection";
 import {
   InputFieldParams,
   InputFieldView,
@@ -28,6 +28,7 @@ export class LoginPageView extends View {
     this.innerFields = [];
     this.createLoginInputField();
     this.createPasswordInputField();
+    this.buttonOnClick();
   }
 
   configureView(): void {
@@ -160,5 +161,15 @@ export class LoginPageView extends View {
     const inputField = new InputFieldView(inputFieldParams);
     this.inputsFrame.append(inputField.getHtmlElement());
     this.innerFields.push(inputField);
+  }
+
+  private buttonOnClick(): void {
+    this.button.addEventListener("click", () => {
+      if (this.isAllFieldsDataValid()) {
+        const login = this.innerFields[0].getValue();
+        const password = this.innerFields[1].getValue();
+        this.connection.sender.login(login, password);
+      }
+    });
   }
 }

@@ -29,6 +29,11 @@ body {
 .button_disabled {
   opacity: 0.4;
 }
+.button.button_selected {
+  border: $border-interfaceBorderFocus;
+  color: $color-interfaceBorderIntence;
+
+}
 @media (hover: hover){
   .button:hover {
     background-color: $color-interfaceBackgroundHovered;

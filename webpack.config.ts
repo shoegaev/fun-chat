@@ -24,6 +24,7 @@ export default (env: EnvVariable) => {
       filename: "[name].[contenthash].js",
       assetModuleFilename: "assets/[name].[hash][ext]",
       clean: true,
+      publicPath: "/",
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -75,6 +76,10 @@ export default (env: EnvVariable) => {
       ? {
           port: env.port ?? 3000,
           open: true,
+          historyApiFallback: true,
+          hot: true,
+          static: path.resolve(__dirname, "./dist"),
+          host: "localhost",
         }
       : undefined,
   };

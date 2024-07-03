@@ -4,10 +4,12 @@ $color-interfaceBackgroundHovered: rgb(47, 54, 58);
 
 $color-background: rgb(39, 63, 67);
 $color-interfaceBorder: rgb(119, 163, 169);
+$color-interfaceBorderIntence: rgb(152, 202, 209);
 $color-text: rgb(255, 255, 255);
 
 // border
 $border-interfaceBorder: $color-interfaceBorder 1px solid;
+$border-interfaceBorderFocus: $color-interfaceBorderIntence 2px solid;
 
 // shapes
 $interfaceBorderRadius: 5px;

@@ -1,25 +1,33 @@
 import { ElementParametrs } from "../util/element-creator";
-import { LoginPageView } from "./login-page-view/login-page-view";
 import { Connection } from "../connection/connection";
 import { View } from "../util/view";
+import { MainView } from "./main-view/main-view";
+import { HeaderView } from "./header-view/header-view";
+import { Router } from "../router/router";
 
-type InnerViews = [LoginPageView];
+type InnerViews = [HeaderView, MainView];
 
 export class AppView extends View {
-  private loginPageView: LoginPageView;
+  public mainView: MainView;
 
-  constructor(connection: Connection) {
+  public headerView: HeaderView;
+
+  constructor(connection: Connection, router: Router) {
     const APP_CONTAINER_PARAMS: ElementParametrs = {
       tag: "div",
       cssClasses: ["main-container"],
     };
     super(APP_CONTAINER_PARAMS);
-    [this.loginPageView] = this.createInnerViews(connection);
+    [this.headerView, this.mainView] = this.createInnerViews(
+      connection,
+      router,
+    );
   }
 
-  private createInnerViews(connection: Connection): InnerViews {
-    const loginPage = new LoginPageView(connection);
-    const arr: InnerViews = [loginPage];
+  private createInnerViews(connection: Connection, router: Router): InnerViews {
+    const header = new HeaderView(router);
+    const main = new MainView(connection);
+    const arr: InnerViews = [header, main];
     arr.forEach((view) => {
       this.getHtmlElement().append(view.getHtmlElement());
     });
