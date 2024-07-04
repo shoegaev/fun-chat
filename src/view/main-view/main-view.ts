@@ -14,7 +14,7 @@ type InnerViews = [
   NotFoundPageView,
 ];
 
-type PagesArr = { page: Pages; view: View }[];
+type PageParam = { page: Pages; view: View; authorizedOnly?: boolean };
 
 export class MainView extends View {
   private loginPageView: LoginPageView;
@@ -25,7 +25,7 @@ export class MainView extends View {
 
   private notFoundPageView: NotFoundPageView;
 
-  private pagesArr: PagesArr;
+  private pagesParams: PageParam[];
 
   constructor(connection: Connection) {
     const MAIN_PARAMS: ElementParametrs = {
@@ -39,7 +39,7 @@ export class MainView extends View {
       this.infoPageView,
       this.notFoundPageView,
     ] = this.configureView(connection);
-    this.pagesArr = this.getPagesArr();
+    this.pagesParams = this.getPagesArr();
   }
 
   private configureView(connection: Connection): InnerViews {
@@ -50,7 +50,7 @@ export class MainView extends View {
     return [loginPage, indexPage, infoPage, notFoundPage];
   }
 
-  private getPagesArr(): PagesArr {
+  private getPagesArr(): PageParam[] {
     return [
       { page: Pages.login, view: this.loginPageView },
       { page: Pages.index, view: this.indexPageView },
@@ -67,7 +67,7 @@ export class MainView extends View {
 
   public setPage(page: Pages): void {
     this.removeContent();
-    const pageView = this.pagesArr.find((item) => item.page === page);
+    const pageView = this.pagesParams.find((item) => item.page === page);
     if (pageView) {
       this.getHtmlElement().append(pageView?.view.getHtmlElement());
     }

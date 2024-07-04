@@ -1,11 +1,13 @@
 import { View } from "../../../util/view";
 import { ElementParametrs } from "../../../util/element-creator";
+import { Pages } from "../../../router/router";
 
 export interface NavButtonParams {
+  page: Pages;
   cssClasses: string[];
   buttonText: string;
   callback: () => void;
-  buttons: HTMLElement[];
+  buttons: NavButtonView[];
 }
 
 export class NavButtonView extends View {
@@ -35,10 +37,14 @@ export class NavButtonView extends View {
     });
   }
 
-  private setSelectedCLass(): void {
+  public setSelectedCLass(): void {
     this.params.buttons.forEach((button) => {
-      button.classList.remove("button_selected");
+      button.removeSelectedStatus();
     });
     this.getHtmlElement().classList.add("button_selected");
+  }
+
+  public removeSelectedStatus(): void {
+    this.getHtmlElement().classList.remove("button_selected");
   }
 }

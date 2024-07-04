@@ -8,7 +8,7 @@ import tickIcon from "./tick-icon.svg";
 
 export interface InputFieldParams {
   labelText: string;
-  labeType: "text" | "password";
+  inputType: "text" | "password";
   paramsForValidation: {
     paramName: string;
     callback: (text: string) => boolean;
@@ -50,7 +50,7 @@ export class InputFieldView extends View {
         atributes: [
           {
             name: "type",
-            value: this.params.labeType,
+            value: this.params.inputType,
           },
         ],
       },

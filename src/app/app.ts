@@ -42,31 +42,46 @@ export class App {
     });
   }
 
+  private setPage(Page: Pages) {
+    this.appView.mainView.setPage(Page);
+    if (Page === Pages.login) {
+      this.appView.headerView.setButtonSelectedStatus(Pages.index);
+    } else if (Page === Pages.notFound) {
+      this.appView.headerView.removeButtonsSelectedStatus();
+    } else {
+      this.appView.headerView.setButtonSelectedStatus(Page);
+    }
+  }
+
   private getRoutes(): Route[] {
     const routes: Route[] = [
       {
         page: Pages.index,
         callback: () => {
-          this.appView.mainView.setPage(Pages.index);
+          if (this.connection.isUserAuthorized()) {
+            this.setPage(Pages.index);
+          } else {
+            this.router.navigate({ page: Pages.login });
+          }
         },
       },
       {
         page: Pages.login,
         callback: () => {
-          this.appView.mainView.setPage(Pages.login);
+          this.setPage(Pages.login);
           // при переходе из index отправить запрос на сервер о выходе юзера из сети
         },
       },
       {
         page: Pages.info,
         callback: () => {
-          this.appView.mainView.setPage(Pages.info);
+          this.setPage(Pages.info);
         },
       },
       {
         page: Pages.notFound,
         callback: () => {
-          this.appView.mainView.setPage(Pages.notFound);
+          this.setPage(Pages.notFound);
         },
       },
     ];

@@ -97,7 +97,7 @@ export class LoginPageView extends View {
   private createLoginInputField() {
     const inputFieldParams: InputFieldParams = {
       labelText: "Login",
-      labeType: "text",
+      inputType: "text",
       cssClasses: ["form__login-input-field"],
       paramsForValidation: [
         {
@@ -126,7 +126,7 @@ export class LoginPageView extends View {
   private createPasswordInputField() {
     const inputFieldParams: InputFieldParams = {
       labelText: "Password",
-      labeType: "password",
+      inputType: "password",
       cssClasses: ["form__password-input-field"],
       paramsForValidation: [
         {

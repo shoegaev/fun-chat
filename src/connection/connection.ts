@@ -18,6 +18,8 @@ export class Connection {
 
   private receiver: Receiver;
 
+  private authorizedUser: { login: string; password: string } | null;
+
   constructor(state: State, serverCallbacks: ServerCallbacks) {
     this.state = state;
     this.socketArr = [];
@@ -25,6 +27,7 @@ export class Connection {
     this.connectionAttempt = 1;
     this.sender = new Sender(this.socketArr);
     this.receiver = new Receiver(this.socketArr, serverCallbacks);
+    this.authorizedUser = null;
   }
 
   private createLoadingWindow(): LoadingWindowView {
@@ -61,7 +64,19 @@ export class Connection {
   private configureSocket(socket: WebSocket): void {
     socket.addEventListener("message", (event) => {
       const data: ServerMessage = JSON.parse(event.data);
+      if (data.type === "USER_LOGIN") {
+        this.authorizedUser = {
+          login: data.payload.user.login,
+          password: data.payload.user.password,
+        };
+      } else if (data.type === "USER_LOGOUT") {
+        this.authorizedUser = null;
+      }
       this.receiver.handleResponse(data);
     });
+  }
+
+  public isUserAuthorized(): boolean {
+    return Boolean(this.authorizedUser);
   }
 }
