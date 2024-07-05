@@ -2,8 +2,16 @@ import { State } from "../state/state";
 import { LoadingWindowView } from "./loading-window-view/loading-window-view";
 import { Sender } from "./sender/sender";
 import { Receiver } from "./receiver/receiver";
-import { ServerMessage, ServerCallbacks } from "./types/connection-types";
+import { ResType } from "./types/global-response-types";
+import { SomeServerResponse } from "./types/response-type";
+import { SomeServerErrResponse } from "./types/error-response-types";
 const SERVER_URL = "ws://127.0.0.1:4000";
+
+export type ServerCallback = { type: ResType; callback: () => void };
+export type ServerErrCallback = {
+  error: SomeServerErrResponse["payload"]["error"];
+  callback: () => void;
+};
 
 export class Connection {
   private state: State;
@@ -20,20 +28,26 @@ export class Connection {
 
   private authorizedUser: { login: string; password: string } | null;
 
-  constructor(state: State, serverCallbacks: ServerCallbacks) {
+  constructor(
+    state: State,
+    serverCallbacks: ServerCallback[],
+    serverErrCallbacks: ServerErrCallback[],
+  ) {
     this.state = state;
     this.socketArr = [];
     this.loadingWindow = this.createLoadingWindow();
     this.connectionAttempt = 1;
     this.sender = new Sender(this.socketArr);
-    this.receiver = new Receiver(this.socketArr, serverCallbacks);
+    this.receiver = new Receiver(
+      this.socketArr,
+      serverCallbacks,
+      serverErrCallbacks,
+    );
     this.authorizedUser = null;
   }
 
-  private createLoadingWindow(): LoadingWindowView {
-    const loadingWindow = new LoadingWindowView();
-    document.body.append(loadingWindow.getHtmlElement());
-    return loadingWindow;
+  public isUserAuthorized(): boolean {
+    return Boolean(this.authorizedUser);
   }
 
   public startConnection(): void {
@@ -61,22 +75,32 @@ export class Connection {
     });
   }
 
+  private createLoadingWindow(): LoadingWindowView {
+    const loadingWindow = new LoadingWindowView();
+    document.body.append(loadingWindow.getHtmlElement());
+    return loadingWindow;
+  }
+
   private configureSocket(socket: WebSocket): void {
     socket.addEventListener("message", (event) => {
-      const data: ServerMessage = JSON.parse(event.data);
-      if (data.type === "USER_LOGIN") {
-        this.authorizedUser = {
-          login: data.payload.user.login,
-          password: data.payload.user.password,
-        };
-      } else if (data.type === "USER_LOGOUT") {
-        this.authorizedUser = null;
-      }
+      const data: SomeServerErrResponse | SomeServerResponse = JSON.parse(
+        event.data,
+      );
+      this.handleUserAuthorizationStatus(data);
       this.receiver.handleResponse(data);
     });
   }
 
-  public isUserAuthorized(): boolean {
-    return Boolean(this.authorizedUser);
+  private handleUserAuthorizationStatus(
+    data: SomeServerErrResponse | SomeServerResponse,
+  ): void {
+    if (data.type === "USER_LOGIN") {
+      this.authorizedUser = {
+        login: data.payload.user.login,
+        password: data.payload.user.password,
+      };
+    } else if (data.type === "USER_LOGOUT") {
+      this.authorizedUser = null;
+    }
   }
 }

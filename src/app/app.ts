@@ -1,7 +1,13 @@
-import { Connection } from "../connection/connection";
+import {
+  Connection,
+  ServerCallback,
+  ServerErrCallback,
+} from "../connection/connection";
 import { Router, Route, Pages } from "../router/router";
 import { State } from "../state/state";
 import { AppView } from "../view/app-view";
+import { ServerCallbacksCreator } from "../serverCallbacksCreator/server-callbacks-creator";
+
 export class App {
   private state: State;
 
@@ -11,13 +17,22 @@ export class App {
 
   private router: Router;
 
-  private serverCallbacks: { type: string; callback: () => void }[];
+  private serverCallbacks: ServerCallback[];
+
+  private serverErrCallbacks: ServerErrCallback[];
 
   constructor() {
     this.serverCallbacks = [];
+    this.serverErrCallbacks = [];
     [this.state, this.connection, this.appView, this.router] =
       this.createComponents();
-    this.setServerCallbacks();
+    const callbackCreator = new ServerCallbacksCreator(
+      this.serverCallbacks,
+      this.serverErrCallbacks,
+      this.appView,
+      this.router,
+    );
+    callbackCreator.createCallbacks();
   }
 
   public start() {
@@ -26,20 +41,15 @@ export class App {
 
   private createComponents(): [State, Connection, AppView, Router] {
     const state = new State();
-    const connection = new Connection(state, this.serverCallbacks);
+    const connection = new Connection(
+      state,
+      this.serverCallbacks,
+      this.serverErrCallbacks,
+    );
     const router = new Router(this.getRoutes());
     const view = new AppView(connection, router);
     document.body.append(view.getHtmlElement());
     return [state, connection, view, router];
-  }
-
-  private setServerCallbacks(): void {
-    this.serverCallbacks.push({
-      type: "USER_LOGIN",
-      callback: () => {
-        this.router.navigate({ page: Pages.index });
-      },
-    });
   }
 
   private setPage(Page: Pages) {
