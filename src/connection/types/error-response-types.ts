@@ -1,4 +1,4 @@
-import { ResType, ServerRes } from "./global-response-types"
+import { ResType, ServerRes } from "./global-response-types";
 
 export interface ServerErrRes extends ServerRes {
   type: ResType.error;
@@ -14,6 +14,7 @@ export enum AuthentificationErrMessage {
 }
 
 export interface AuthentificationErrResponse extends ServerErrRes {
+  id: "login";
   payload: {
     error: AuthentificationErrMessage;
   };
@@ -26,9 +27,12 @@ export enum LogautErrMessage {
 }
 
 export interface LogautErrResponse extends ServerErrRes {
+  id: "logaut";
   payload: {
     error: LogautErrMessage;
   };
 }
 
-export type SomeServerErrResponse = AuthentificationErrResponse | LogautErrResponse;
+export type SomeServerErrResponse =
+  | AuthentificationErrResponse
+  | LogautErrResponse;

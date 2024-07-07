@@ -1,8 +1,13 @@
+import { LoadingWindowView } from "../loading-window-view/loading-window-view";
+
 export class Sender {
   socketArr: WebSocket[];
 
-  constructor(socketArr: WebSocket[]) {
+  loadingWindowView: LoadingWindowView;
+
+  constructor(socketArr: WebSocket[], loaddingWindowView: LoadingWindowView) {
     this.socketArr = socketArr;
+    this.loadingWindowView = loaddingWindowView;
   }
 
   private getSocket(): WebSocket {
@@ -11,7 +16,7 @@ export class Sender {
 
   public login(login: string, password: string): void {
     const request = {
-      id: `login-${login}`,
+      id: "login",
       type: "USER_LOGIN",
       payload: {
         user: {
@@ -21,5 +26,6 @@ export class Sender {
       },
     };
     this.getSocket().send(JSON.stringify(request));
+    this.loadingWindowView.show();
   }
 }

@@ -4,7 +4,10 @@ import { Sender } from "./sender/sender";
 import { Receiver } from "./receiver/receiver";
 import { ResType } from "./types/global-response-types";
 import { SomeServerResponse } from "./types/response-type";
-import { SomeServerErrResponse } from "./types/error-response-types";
+import {
+  SomeServerErrResponse,
+  AuthentificationErrResponse,
+} from "./types/error-response-types";
 const SERVER_URL = "ws://127.0.0.1:4000";
 
 export type ServerCallback = { type: ResType; callback: () => void };
@@ -37,7 +40,7 @@ export class Connection {
     this.socketArr = [];
     this.loadingWindow = this.createLoadingWindow();
     this.connectionAttempt = 1;
-    this.sender = new Sender(this.socketArr);
+    this.sender = new Sender(this.socketArr, this.loadingWindow);
     this.receiver = new Receiver(
       this.socketArr,
       serverCallbacks,
@@ -69,7 +72,9 @@ export class Connection {
         if (this.connectionAttempt <= 6) {
           this.startConnection();
         } else {
+          // -----------------------------------------
           // some error handling logic
+          // -----------------------------------------
         }
       }, 500);
     });
@@ -87,20 +92,35 @@ export class Connection {
         event.data,
       );
       this.handleUserAuthorizationStatus(data);
+      if (data.type === "ERROR" && data.id === "login") {
+        this.showAuthentificationErrorMessage(data);
+      }
       this.receiver.handleResponse(data);
+    });
+    socket.addEventListener("close", () => {
+      // -----------------------------------------
+      // try to restore connection, reauthorizaton
+      // -----------------------------------------
     });
   }
 
   private handleUserAuthorizationStatus(
     data: SomeServerErrResponse | SomeServerResponse,
   ): void {
-    if (data.type === "USER_LOGIN") {
+    if (data.type === "USER_LOGIN" && !this.authorizedUser) {
       this.authorizedUser = {
         login: data.payload.user.login,
         password: data.payload.user.password,
       };
-    } else if (data.type === "USER_LOGOUT") {
+      this.loadingWindow.hide();
+    } else if (data.type === "USER_LOGOUT" && this.authorizedUser) {
       this.authorizedUser = null;
     }
+  }
+
+  private showAuthentificationErrorMessage(
+    response: AuthentificationErrResponse,
+  ) {
+    this.loadingWindow.error(response.payload.error);
   }
 }

@@ -9,9 +9,12 @@ export class IndexPageView extends View {
     const INDEX_PARAMS: ElementParametrs = {
       tag: "div",
       cssClasses: ["index-page"],
-      textContent: "INDEX",
     };
     super(INDEX_PARAMS);
     this.connection = connection;
+  }
+
+  private configureView(): void {
+    
   }
 }

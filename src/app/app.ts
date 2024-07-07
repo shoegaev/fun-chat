@@ -6,7 +6,7 @@ import {
 import { Router, Route, Pages } from "../router/router";
 import { State } from "../state/state";
 import { AppView } from "../view/app-view";
-import { ServerCallbacksCreator } from "../serverCallbacksCreator/server-callbacks-creator";
+import { ServerCallbacksCreator } from "../server-callbacks-creator/server-callbacks-creator";
 
 export class App {
   private state: State;
