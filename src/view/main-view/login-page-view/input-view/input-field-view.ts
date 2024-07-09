@@ -105,11 +105,11 @@ export class InputFieldView extends View {
         cssClasses: ["criterium__text"],
         textContent: param.paramName,
       });
-      criteriumStatus.addInnerElements(tickIconSvg.getElement());
-      criterium.addInnerElements(
-        criteriumDot.getElement(),
-        criteriumText.getElement(),
-        criteriumStatus.getElement(),
+      criteriumStatus.apendInnerElements(tickIconSvg);
+      criterium.apendInnerElements(
+        criteriumDot,
+        criteriumText,
+        criteriumStatus,
       );
       this.setCriteriumCallback(param.callback, criterium.getElement(), index);
       container?.append(criterium.getElement());

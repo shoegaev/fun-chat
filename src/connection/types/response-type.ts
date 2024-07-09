@@ -20,4 +20,30 @@ export interface LogoutRes extends ServerRes {
   };
 }
 
-export type SomeServerResponse = AuthenticationRes | LogoutRes;
+export interface ExternalLoginRes extends ServerRes {
+  type: ResType.externalLogin;
+  payload: {
+    user: {
+      login: string;
+      isLogined: true;
+    };
+  };
+}
+
+export interface ExternalLogoutRes extends ServerRes {
+  type: ResType.externalLogout;
+  payload: {
+    user: {
+      login: string;
+      isLogined: false;
+    };
+  };
+}
+
+export type SomeServerResponse =
+  | AuthenticationRes
+  | LogoutRes
+  | ExternalLoginRes
+  | ExternalLogoutRes;
+
+// -----разобратсья с неймингом------- login или authentification

@@ -3,7 +3,7 @@ import { View } from "../../util/view";
 import { ElementParametrs } from "../../util/element-creator";
 import { Connection } from "../../connection/connection";
 import { IndexPageView } from "./index-page-view/index-page-view";
-import { Pages } from "../../router/router";
+import { Pages, Router } from "../../router/router";
 import { InfoPageView } from "./info-page-view/info-page-view";
 import { NotFoundPageView } from "./not-found-page-view/not-found-page-view";
 
@@ -17,17 +17,17 @@ type InnerViews = [
 type PageParam = { page: Pages; view: View; authorizedOnly?: boolean };
 
 export class MainView extends View {
-  private loginPageView: LoginPageView;
+  public readonly loginPageView: LoginPageView;
 
-  private indexPageView: IndexPageView;
+  public readonly indexPageView: IndexPageView;
 
-  private infoPageView: InfoPageView;
+  public readonly infoPageView: InfoPageView;
 
-  private notFoundPageView: NotFoundPageView;
+  public readonly notFoundPageView: NotFoundPageView;
 
   private pagesParams: PageParam[];
 
-  constructor(connection: Connection) {
+  constructor(connection: Connection, router: Router) {
     const MAIN_PARAMS: ElementParametrs = {
       tag: "main",
       cssClasses: ["content"],
@@ -38,13 +38,13 @@ export class MainView extends View {
       this.indexPageView,
       this.infoPageView,
       this.notFoundPageView,
-    ] = this.configureView(connection);
+    ] = this.configureView(connection, router);
     this.pagesParams = this.getPagesArr();
   }
 
-  private configureView(connection: Connection): InnerViews {
+  private configureView(connection: Connection, router: Router): InnerViews {
     const loginPage = new LoginPageView(connection);
-    const indexPage = new IndexPageView(connection);
+    const indexPage = new IndexPageView(connection, router);
     const infoPage = new InfoPageView();
     const notFoundPage = new NotFoundPageView();
     return [loginPage, indexPage, infoPage, notFoundPage];

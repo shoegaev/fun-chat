@@ -1,19 +1,22 @@
 import { AppView } from "../view/app-view";
+import { IndexPageView } from "../view/main-view/index-page-view/index-page-view";
 import { Router, Pages } from "../router/router";
-import { ServerCallback, ServerErrCallback } from "../connection/connection";
+import { ServerErrCallback, SomeServerCallback} from "../connection/types/server-callbacks-types";
 import { ResType } from "../connection/types/global-response-types";
 
 export class ServerCallbacksCreator {
-  private serverCallbacks: ServerCallback[];
+  private serverCallbacks: SomeServerCallback[];
 
   private serverErrCallbacks: ServerErrCallback[];
 
   private appView: AppView;
 
+  private indexPageView: IndexPageView;
+
   private router: Router;
 
   constructor(
-    serverCallbacks: ServerCallback[],
+    serverCallbacks: SomeServerCallback[],
     serverErrCallbacks: ServerErrCallback[],
     appView: AppView,
     router: Router,
@@ -21,6 +24,7 @@ export class ServerCallbacksCreator {
     this.serverCallbacks = serverCallbacks;
     this.serverErrCallbacks = serverErrCallbacks;
     this.appView = appView;
+    this.indexPageView = appView.mainView.indexPageView;
     this.router = router;
     this.createCallbacks();
   }
@@ -37,4 +41,13 @@ export class ServerCallbacksCreator {
       },
     });
   }
+
+  // private createUsersListCallbacks(): void {
+  //   this.serverCallbacks.push({
+  //     type: ResType.externalLogin,
+  //     callback: (userLogin: string) => {
+  //       // const userView = this.indexPageView.userListView.findUser();
+  //     },
+  //   });
+  // }
 }

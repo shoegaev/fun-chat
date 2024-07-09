@@ -44,10 +44,14 @@ class ElementCreator {
     return this.element;
   }
 
-  public addInnerElements(...param: HTMLElement[]): void {
-    for (let i = 0; i < param.length; i += 1) {
-      this.getElement()?.append(param[i]);
-    }
+  public apendInnerElements(...elements: (HTMLElement | ElementCreator)[]): void {
+    elements.forEach((element) => {
+      if (element instanceof ElementCreator) {
+        this.element.append(element.getElement());
+      } else {
+        this.element.append(element);
+      }
+    });
   }
 
   public setTextContent(text: string): void {

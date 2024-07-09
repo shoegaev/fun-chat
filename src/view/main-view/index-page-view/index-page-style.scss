@@ -1,0 +1,15 @@
+@import "../../../variables.scss";
+.index-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.index-page__content {
+  background-color: $color-interfaceBackground;
+  display: flex;
+  width: 900px;
+  height: 500px;
+  border: $border-interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  padding: 20px;
+}

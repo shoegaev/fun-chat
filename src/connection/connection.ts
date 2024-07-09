@@ -2,19 +2,13 @@ import { State } from "../state/state";
 import { LoadingWindowView } from "./loading-window-view/loading-window-view";
 import { Sender } from "./sender/sender";
 import { Receiver } from "./receiver/receiver";
-import { ResType } from "./types/global-response-types";
 import { SomeServerResponse } from "./types/response-type";
+import { SomeServerCallback, ServerErrCallback } from "./types/server-callbacks-types";
 import {
   SomeServerErrResponse,
   AuthentificationErrResponse,
 } from "./types/error-response-types";
 const SERVER_URL = "ws://127.0.0.1:4000";
-
-export type ServerCallback = { type: ResType; callback: () => void };
-export type ServerErrCallback = {
-  error: SomeServerErrResponse["payload"]["error"];
-  callback: () => void;
-};
 
 export class Connection {
   private state: State;
@@ -33,7 +27,7 @@ export class Connection {
 
   constructor(
     state: State,
-    serverCallbacks: ServerCallback[],
+    serverCallbacks: SomeServerCallback[],
     serverErrCallbacks: ServerErrCallback[],
   ) {
     this.state = state;
@@ -72,9 +66,9 @@ export class Connection {
         if (this.connectionAttempt <= 6) {
           this.startConnection();
         } else {
-          // -----------------------------------------
+          // -------------------------
           // some error handling logic
-          // -----------------------------------------
+          // -------------------------
         }
       }, 500);
     });
@@ -94,6 +88,7 @@ export class Connection {
       this.handleUserAuthorizationStatus(data);
       if (data.type === "ERROR" && data.id === "login") {
         this.showAuthentificationErrorMessage(data);
+        return;
       }
       this.receiver.handleResponse(data);
     });

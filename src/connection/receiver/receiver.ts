@@ -1,10 +1,15 @@
-import { ServerCallback, ServerErrCallback } from "../connection";
+import {
+  UserAuthentificationCallback,
+  ServerExternalUserCallback,
+  ServerErrCallback,
+  SomeServerCallback,
+} from "../types/server-callbacks-types";
 import { SomeServerResponse } from "../types/response-type";
 import { SomeServerErrResponse } from "../types/error-response-types";
 import { ResType } from "../types/global-response-types";
 
 export class Receiver {
-  private serverCallbacks: ServerCallback[];
+  private serverCallbacks: SomeServerCallback[];
 
   private serverErrCallbacks: ServerErrCallback[];
 
@@ -12,7 +17,7 @@ export class Receiver {
 
   constructor(
     socketArr: WebSocket[],
-    serverCallbacks: ServerCallback[],
+    serverCallbacks: SomeServerCallback[],
     serverErrCallbacks: ServerErrCallback[],
   ) {
     this.socketArr = socketArr;
@@ -24,22 +29,19 @@ export class Receiver {
     data: SomeServerResponse | SomeServerErrResponse,
   ): void {
     if (data.type === ResType.error) {
-      this.getErrCallback(data.payload.error);
+      this.getErrCallback(data.payload.error)();
     } else {
-      this.getCallback(data.type)();
+      const callback = this.getCallback(data.type);
+      this.callCallback(callback, data);
     }
   }
 
-  private getSocket(): WebSocket {
-    return this.socketArr[0];
-  }
-
-  private getCallback(type: ResType): () => void {
-    const object = this.serverCallbacks.find((obj) => obj.type === type);
-    if (!object) {
+  private getCallback(type: ResType): SomeServerCallback {
+    const callback = this.serverCallbacks.find((obj) => obj.type === type);
+    if (!callback) {
       throw new Error(`cannot find callback with type "${type}"`);
     }
-    return object.callback;
+    return callback;
   }
 
   private getErrCallback(errorText: SomeServerErrResponse["payload"]["error"]) {
@@ -50,5 +52,24 @@ export class Receiver {
       throw new Error(`cannot find error callback with text "${errorText}"`);
     }
     return object.callback;
+  }
+
+  private callCallback(
+    callback: SomeServerCallback,
+    data: SomeServerResponse,
+  ): void {
+    if (data.type !== callback.type) {
+      throw new Error();
+    }
+    if (
+      data.type === ResType.externalLogin ||
+      data.type === ResType.externalLogout
+    ) {
+      (callback as ServerExternalUserCallback).callback(
+        data.payload.user.login,
+      );
+    } else {
+      (callback as UserAuthentificationCallback).callback();
+    }
   }
 }

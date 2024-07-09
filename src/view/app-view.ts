@@ -26,7 +26,7 @@ export class AppView extends View {
 
   private createInnerViews(connection: Connection, router: Router): InnerViews {
     const header = new HeaderView(router);
-    const main = new MainView(connection);
+    const main = new MainView(connection, router);
     const arr: InnerViews = [header, main];
     arr.forEach((view) => {
       this.getHtmlElement().append(view.getHtmlElement());

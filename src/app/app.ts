@@ -1,8 +1,7 @@
 import {
   Connection,
-  ServerCallback,
-  ServerErrCallback,
 } from "../connection/connection";
+import { ServerErrCallback, SomeServerCallback } from "../connection/types/server-callbacks-types";
 import { Router, Route, Pages } from "../router/router";
 import { State } from "../state/state";
 import { AppView } from "../view/app-view";
@@ -17,7 +16,7 @@ export class App {
 
   private router: Router;
 
-  private serverCallbacks: ServerCallback[];
+  private serverCallbacks: SomeServerCallback[];
 
   private serverErrCallbacks: ServerErrCallback[];
 
@@ -66,16 +65,18 @@ export class App {
   private getRoutes(): Route[] {
     const routes: Route[] = [
       {
+        hasResource: true,
         page: Pages.index,
         callback: () => {
-          if (this.connection.isUserAuthorized()) {
-            this.setPage(Pages.index);
-          } else {
+          if (!this.connection.isUserAuthorized()) {
             this.router.navigate({ page: Pages.login });
+            return;
           }
+          this.setPage(Pages.index);
         },
       },
       {
+        hasResource: false,
         page: Pages.login,
         callback: () => {
           this.setPage(Pages.login);
@@ -83,12 +84,14 @@ export class App {
         },
       },
       {
+        hasResource: false,
         page: Pages.info,
         callback: () => {
           this.setPage(Pages.info);
         },
       },
       {
+        hasResource: false,
         page: Pages.notFound,
         callback: () => {
           this.setPage(Pages.notFound);
