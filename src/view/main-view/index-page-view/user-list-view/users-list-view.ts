@@ -13,7 +13,7 @@ export class UsersListView extends View {
   private list: HTMLElement;
 
   private users: {
-    selected: null | UserView;
+    selectedUser: null | UserView;
     arr: UserView[];
   };
 
@@ -25,16 +25,21 @@ export class UsersListView extends View {
     super(USERS_LIST_PARAMS);
     this.router = router;
     this.users = {
-      selected: null,
+      selectedUser: null,
       arr: [],
     };
     this.list = this.configureView();
-    ["ivan", "igor", "konstantin"].forEach((str) => {
-      this.addUser(str);
-    });
   }
 
-  public addUser(login: string) {
+  public clearList(): void {
+    this.list.innerHTML = "";
+    this.users = {
+      selectedUser: null,
+      arr: [],
+    };
+  }
+
+  public addUser(login: string): UserView {
     const user = new UserView({
       users: this.users,
       login: login,
@@ -45,6 +50,7 @@ export class UsersListView extends View {
     });
     this.users.arr.push(user);
     this.list.append(user.getHtmlElement());
+    return user;
   }
 
   public findUser(login: string): UserView | undefined {

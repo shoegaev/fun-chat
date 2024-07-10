@@ -7,6 +7,7 @@ export type ServerErrCallback = {
   callback: () => void;
 };
 
+// extended user authentification
 export interface ExternalUserLoginCallback extends ServerCallback {
   type: ResType.externalLogin;
   callback: (userLogin: string) => void;
@@ -17,6 +18,11 @@ export interface ExternalUserLogoutCallback extends ServerCallback {
   callback: (userLogin: string) => void;
 }
 
+export type ServerExternalUserCallback =
+  | ExternalUserLoginCallback
+  | ExternalUserLogoutCallback;
+
+// user authentification
 export interface UserLoginCallback extends ServerCallback {
   type: ResType.login;
   callback: () => void;
@@ -31,10 +37,13 @@ export type UserAuthentificationCallback =
   | UserLoginCallback
   | UserLogoutCallback;
 
-export type ServerExternalUserCallback =
-  | ExternalUserLoginCallback
-  | ExternalUserLogoutCallback;
+// getting users list
+export interface UsersListCallback extends ServerCallback {
+  type: ResType.activeUsersList | ResType.inactiveUsersList;
+  callback: (list: { login: string; isLogined: boolean }[]) => void;
+}
 
 export type SomeServerCallback =
   | ServerExternalUserCallback
-  | UserAuthentificationCallback;
+  | UserAuthentificationCallback
+  | UsersListCallback;

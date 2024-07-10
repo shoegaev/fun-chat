@@ -4,10 +4,13 @@ export enum Pages {
   login = "login",
   notFound = "notFound",
 }
+
 export interface Route {
+  hasResource: boolean;
   page: Pages;
   callback: (resource?: string) => void;
 }
+
 export interface UrlParams {
   page: Pages;
   resource?: string;
@@ -38,7 +41,11 @@ export class Router {
       this.redirectToNotFoundPage();
       return;
     }
-    route?.callback(urlParams.resource);
+    if (!route.hasResource && urlParams?.resource) {
+      this.navigate({ page: route.page });
+    } else {
+      route?.callback(urlParams.resource);
+    }
   }
 
   private pushState(urlParams: UrlParams): void {

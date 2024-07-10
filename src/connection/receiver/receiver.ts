@@ -3,6 +3,7 @@ import {
   ServerExternalUserCallback,
   ServerErrCallback,
   SomeServerCallback,
+  UsersListCallback
 } from "../types/server-callbacks-types";
 import { SomeServerResponse } from "../types/response-type";
 import { SomeServerErrResponse } from "../types/error-response-types";
@@ -68,6 +69,13 @@ export class Receiver {
       (callback as ServerExternalUserCallback).callback(
         data.payload.user.login,
       );
+    } else if (
+      data.type === ResType.activeUsersList ||
+      data.type === ResType.inactiveUsersList
+    ) {
+      (
+        callback as UsersListCallback
+      ).callback(data.payload.users);
     } else {
       (callback as UserAuthentificationCallback).callback();
     }

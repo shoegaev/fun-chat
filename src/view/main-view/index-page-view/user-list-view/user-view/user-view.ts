@@ -7,7 +7,7 @@ import "./user-style.scss";
 
 export interface UserViewParams {
   users: {
-    selected: null | UserView;
+    selectedUser: null | UserView;
     arr: UserView[];
   };
   login: string;
@@ -16,11 +16,13 @@ export interface UserViewParams {
 }
 
 export class UserView extends View {
-  public params: UserViewParams;
+  public readonly params: UserViewParams;
 
   private status: HTMLElement;
 
   private unreadMessages: HTMLElement;
+
+  private unreadMessagesNumber: number;
 
   constructor(params: UserViewParams) {
     const USER_VIEW_PARAMS: ElementParametrs = {
@@ -29,6 +31,7 @@ export class UserView extends View {
     };
     super(USER_VIEW_PARAMS);
     this.params = params;
+    this.unreadMessagesNumber = 0;
     [this.status, this.unreadMessages] = this.connfigureView(params.login);
   }
 
@@ -44,10 +47,28 @@ export class UserView extends View {
     this.getHtmlElement().classList.remove("user_selected");
   }
 
+  public setOnlineStatus(): void {
+    this.status.classList.add("user__status_online");
+  }
+
+  public removeOnlineStatus(): void {
+    this.status.classList.remove("user__status_online");
+  }
+
+  public addUnreadMessage(): void {
+    this.unreadMessagesNumber += 1;
+    this.unreadMessages.textContent = `(${this.unreadMessagesNumber})`;
+  }
+
+  public removeUnreadMessages(): void {
+    this.unreadMessages.textContent = "";
+    this.unreadMessagesNumber = 0;
+  }
+  
   private connfigureView(login: string): HTMLElement[] {
     const status = new ElementCreator({
       tag: "div",
-      cssClasses: ["user__status", "user__status_online"],
+      cssClasses: ["user__status"],
     });
     const loginText = new ElementCreator({
       tag: "span",
@@ -70,12 +91,12 @@ export class UserView extends View {
 
   private setOnClick(): void {
     this.getHtmlElement().addEventListener("click", () => {
-      if (this.params.users.selected === this) {
+      if (this.params.users.selectedUser === this) {
         return;
       }
       this.setSelectedStatus();
-      this.params.users.selected?.removeSelectedStatus();
-      this.params.users.selected = this;
+      this.params.users.selectedUser?.removeSelectedStatus();
+      this.params.users.selectedUser = this;
     });
   }
 }

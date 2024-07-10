@@ -1,9 +1,9 @@
 import { LoadingWindowView } from "../loading-window-view/loading-window-view";
 
 export class Sender {
-  socketArr: WebSocket[];
+  private socketArr: WebSocket[];
 
-  loadingWindowView: LoadingWindowView;
+  private loadingWindowView: LoadingWindowView;
 
   constructor(socketArr: WebSocket[], loaddingWindowView: LoadingWindowView) {
     this.socketArr = socketArr;
@@ -27,5 +27,20 @@ export class Sender {
     };
     this.getSocket().send(JSON.stringify(request));
     this.loadingWindowView.show();
+  }
+
+  public getUserList(): void {
+    const request1 = {
+      id: "",
+      type: "USER_ACTIVE",
+      payload: null,
+    };
+    const request2 = {
+      id: "",
+      type: "USER_INACTIVE",
+      payload: null,
+    };
+    this.getSocket().send(JSON.stringify(request1));
+    this.getSocket().send(JSON.stringify(request2));
   }
 }

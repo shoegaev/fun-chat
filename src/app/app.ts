@@ -1,7 +1,8 @@
+import { Connection } from "../connection/connection";
 import {
-  Connection,
-} from "../connection/connection";
-import { ServerErrCallback, SomeServerCallback } from "../connection/types/server-callbacks-types";
+  ServerErrCallback,
+  SomeServerCallback,
+} from "../connection/types/server-callbacks-types";
 import { Router, Route, Pages } from "../router/router";
 import { State } from "../state/state";
 import { AppView } from "../view/app-view";
@@ -30,6 +31,7 @@ export class App {
       this.serverErrCallbacks,
       this.appView,
       this.router,
+      this.connection,
     );
     callbackCreator.createCallbacks();
   }
@@ -73,6 +75,7 @@ export class App {
             return;
           }
           this.setPage(Pages.index);
+          this.connection.sender.getUserList();
         },
       },
       {

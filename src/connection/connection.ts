@@ -23,7 +23,7 @@ export class Connection {
 
   private receiver: Receiver;
 
-  private authorizedUser: { login: string; password: string } | null;
+  public authorizedUser: { login: string; password: string } | null;
 
   constructor(
     state: State,

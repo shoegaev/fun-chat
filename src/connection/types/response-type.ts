@@ -40,10 +40,26 @@ export interface ExternalLogoutRes extends ServerRes {
   };
 }
 
+export interface InactiveUserListRes extends ServerRes {
+  type: ResType.inactiveUsersList;
+  payload: {
+    users: {login: string, isLogined: true}[];
+  };
+}
+
+export interface ActiveUserListRes extends ServerRes {
+  type: ResType.activeUsersList;
+  payload: {
+    users: {login: string, isLogined: false}[];
+  };
+}
+
 export type SomeServerResponse =
   | AuthenticationRes
   | LogoutRes
   | ExternalLoginRes
-  | ExternalLogoutRes;
+  | ExternalLogoutRes
+  | InactiveUserListRes
+  | ActiveUserListRes;
 
 // -----разобратсья с неймингом------- login или authentification
