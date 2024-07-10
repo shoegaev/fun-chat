@@ -1,0 +1,61 @@
+@import "../../../../../variables.scss";
+.user-selector__search-line {
+  width: 100%;
+  position: relative;
+  height: 20px;
+  display: flex;
+  .search-line__input {
+    padding: 2px 30px 2px 5px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-top-left-radius: $interfaceBorderRadius;
+    border-bottom-left-radius: $interfaceBorderRadius;
+  }
+  .search-line__input:focus {
+    outline: none;
+  }
+  .search-line__clear-button {
+    width: 20px;
+    height: 90%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 25px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: $interfaceBorderRadius;
+    transition: background-color 0.2s ease;
+    .search-line__cross-icon {
+      width: 80%;
+      height: 80%;
+    }
+  }
+  .search-line__search-button {
+    background-color: $color-interfaceBackground;
+    border: $border-interfaceBorder;
+    width: 25px;
+    height: 100%;
+    transition: background-color 0.2s ease;
+    border-top-right-radius: $interfaceBorderRadius;
+    border-bottom-right-radius: $interfaceBorderRadius;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .search-line__magnifier-icon {
+      width: 80%;
+      height: 80%;
+    }
+  }
+}
+@media (hover: hover) {
+  .search-line__search-button:hover {
+    background-color: $color-interfaceBackgroundHovered;
+  }
+  .search-line__clear-button:hover {
+    background-color: rgba($color-interfaceBackgroundHovered, 0.3);
+  }
+}
