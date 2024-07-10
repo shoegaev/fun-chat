@@ -7,16 +7,16 @@ export interface ServerErrRes extends ServerRes {
   };
 }
 
-export enum AuthentificationErrMessage {
+export enum LoginErrMessage {
   loginInUse = "a user with this login is already authorized",
   wrongPassword = "incorrect password",
   alreadyAuthorized = "another user is already authorized in this connection",
 }
 
-export interface AuthentificationErrResponse extends ServerErrRes {
+export interface LoginErrResponse extends ServerErrRes {
   id: "login";
   payload: {
-    error: AuthentificationErrMessage;
+    error: LoginErrMessage;
   };
 }
 
@@ -34,5 +34,5 @@ export interface LogautErrResponse extends ServerErrRes {
 }
 
 export type SomeServerErrResponse =
-  | AuthentificationErrResponse
+  | LoginErrResponse
   | LogautErrResponse;

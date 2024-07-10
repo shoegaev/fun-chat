@@ -1,9 +1,9 @@
 import {
-  UserAuthentificationCallback,
+  UserAuthenticationCallback,
   ServerExternalUserCallback,
   ServerErrCallback,
   SomeServerCallback,
-  UsersListCallback
+  UserListCallback
 } from "../types/server-callbacks-types";
 import { SomeServerResponse } from "../types/response-type";
 import { SomeServerErrResponse } from "../types/error-response-types";
@@ -70,14 +70,14 @@ export class Receiver {
         data.payload.user.login,
       );
     } else if (
-      data.type === ResType.activeUsersList ||
-      data.type === ResType.inactiveUsersList
+      data.type === ResType.activeUserList ||
+      data.type === ResType.inactiveUserList
     ) {
       (
-        callback as UsersListCallback
+        callback as UserListCallback
       ).callback(data.payload.users);
     } else {
-      (callback as UserAuthentificationCallback).callback();
+      (callback as UserAuthenticationCallback).callback();
     }
   }
 }

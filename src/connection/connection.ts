@@ -6,7 +6,7 @@ import { SomeServerResponse } from "./types/response-type";
 import { SomeServerCallback, ServerErrCallback } from "./types/server-callbacks-types";
 import {
   SomeServerErrResponse,
-  AuthentificationErrResponse,
+  LoginErrResponse,
 } from "./types/error-response-types";
 const SERVER_URL = "ws://127.0.0.1:4000";
 
@@ -87,7 +87,7 @@ export class Connection {
       );
       this.handleUserAuthorizationStatus(data);
       if (data.type === "ERROR" && data.id === "login") {
-        this.showAuthentificationErrorMessage(data);
+        this.showAuthenticationErrorMessage(data);
         return;
       }
       this.receiver.handleResponse(data);
@@ -113,8 +113,8 @@ export class Connection {
     }
   }
 
-  private showAuthentificationErrorMessage(
-    response: AuthentificationErrResponse,
+  private showAuthenticationErrorMessage(
+    response: LoginErrResponse,
   ) {
     this.loadingWindow.error(response.payload.error);
   }

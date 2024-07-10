@@ -5,9 +5,9 @@ import {
 } from "../../../../util/element-creator";
 import { Router, Pages } from "../../../../router/router";
 import { UserView } from "./user-view/user-view";
-import "./users-list-style.scss";
+import "./user-list-style.scss";
 
-export class UsersListView extends View {
+export class UserListView extends View {
   private router: Router;
 
   private list: HTMLElement;

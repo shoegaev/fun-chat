@@ -4,7 +4,7 @@ import {
   ElementCreator,
 } from "../../../util/element-creator";
 import { Connection } from "../../../connection/connection";
-import { UsersListView } from "./user-list-view/users-list-view";
+import { UserListView } from "./user-list-view/user-list-view";
 import { MessengerInterfaceView } from "./messenger-interface-view/messenger-interface-view";
 import { Router } from "../../../router/router";
 import "./index-page-style.scss";
@@ -16,7 +16,7 @@ export class IndexPageView extends View {
 
   private content: HTMLElement;
 
-  public userListView: UsersListView;
+  public userListView: UserListView;
 
   public messengerInterfaceView: MessengerInterfaceView;
 
@@ -42,8 +42,8 @@ export class IndexPageView extends View {
     return content.getElement();
   }
 
-  private createUserListView(): UsersListView {
-    const userList = new UsersListView(["index-page__users-list"], this.router);
+  private createUserListView(): UserListView {
+    const userList = new UserListView(["index-page__users-list"], this.router);
     this.content.append(userList.getHtmlElement());
     return userList;
   }

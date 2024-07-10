@@ -1,6 +1,6 @@
 import { ServerRes, ResType } from "./global-response-types";
 
-export interface AuthenticationRes extends ServerRes {
+export interface LoginRes extends ServerRes {
   type: ResType.login;
   payload: {
     user: {
@@ -41,25 +41,24 @@ export interface ExternalLogoutRes extends ServerRes {
 }
 
 export interface InactiveUserListRes extends ServerRes {
-  type: ResType.inactiveUsersList;
+  type: ResType.inactiveUserList;
   payload: {
     users: {login: string, isLogined: true}[];
   };
 }
 
 export interface ActiveUserListRes extends ServerRes {
-  type: ResType.activeUsersList;
+  type: ResType.activeUserList;
   payload: {
     users: {login: string, isLogined: false}[];
   };
 }
 
 export type SomeServerResponse =
-  | AuthenticationRes
+  | LoginRes
   | LogoutRes
   | ExternalLoginRes
   | ExternalLogoutRes
   | InactiveUserListRes
   | ActiveUserListRes;
 
-// -----разобратсья с неймингом------- login или authentification

@@ -40,7 +40,7 @@ export class ServerCallbacksCreator {
   public createCallbacks(): void {
     this.createAuthorizationCallbacks();
     this.createExtendedUserAuthetificationCallbacks();
-    this.gettingUsersListCallback();
+    this.gettingUserListCallback();
   }
 
   private createAuthorizationCallbacks(): void {
@@ -75,7 +75,7 @@ export class ServerCallbacksCreator {
     );
   }
 
-  private gettingUsersListCallback(): void {
+  private gettingUserListCallback(): void {
     const userListView = this.indexPageView.userListView;
     const userListCallback = (
       list: { login: string; isLogined: boolean }[],
@@ -92,11 +92,11 @@ export class ServerCallbacksCreator {
     };
     this.serverCallbacks.push(
       {
-        type: ResType.activeUsersList,
+        type: ResType.activeUserList,
         callback: userListCallback,
       },
       {
-        type: ResType.inactiveUsersList,
+        type: ResType.inactiveUserList,
         callback: userListCallback,
       },
     );
