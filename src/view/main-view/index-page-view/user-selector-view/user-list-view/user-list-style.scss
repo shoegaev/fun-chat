@@ -1,7 +1,16 @@
 @import "../../../../../variables.scss";
-.user-selector__user-list {
+.user-list {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+.user-list_online-filter {
+  .user:not(.user_online) {
+    @include hidden;
+    display: none;
+  }
+}
+.user_filtered-by-name {
+  display: none;
 }

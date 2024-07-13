@@ -5,11 +5,15 @@ import {
 } from "../../../../../util/element-creator";
 import "./user-style.scss";
 
+export type Users = {
+  selectedUser: null | UserView;
+  userArr: UserView[];
+  onlineUserArr: UserView[];
+  unreadUserArr: UserView[];
+};
+
 export interface UserViewParams {
-  users: {
-    selectedUser: null | UserView;
-    arr: UserView[];
-  };
+  users: Users;
   login: string;
   cssClasses: string[];
   callback: () => void;
@@ -48,11 +52,14 @@ export class UserView extends View {
   }
 
   public setOnlineStatus(): void {
-    this.status.classList.add("user__status_online");
+    this.getHtmlElement().classList.add("user_online");
+    this.params.users.onlineUserArr.push(this);
   }
 
   public removeOnlineStatus(): void {
-    this.status.classList.remove("user__status_online");
+    const onlineUserArr = this.params.users.onlineUserArr;
+    this.getHtmlElement().classList.remove("user_online");
+    onlineUserArr.splice(onlineUserArr.indexOf(this), 1);
   }
 
   public addUnreadMessage(): void {
@@ -64,7 +71,7 @@ export class UserView extends View {
     this.unreadMessages.textContent = "";
     this.unreadMessagesNumber = 0;
   }
-  
+
   private connfigureView(login: string): HTMLElement[] {
     const status = new ElementCreator({
       tag: "div",

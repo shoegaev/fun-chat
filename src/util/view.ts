@@ -1,7 +1,7 @@
 import { ElementCreator, ElementParametrs } from "./element-creator";
 
 export abstract class View {
-  private viewCreator: ElementCreator;
+  public readonly viewCreator: ElementCreator;
 
   constructor(param: ElementParametrs) {
     this.viewCreator = new ElementCreator(param);

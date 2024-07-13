@@ -1,0 +1,86 @@
+@import "../../../../../variables.scss";
+.filters {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 3px 5px;
+  gap: 3px;
+  transition: height 0.2s ease;
+  height: 27px;
+  overflow: hidden;
+}
+.filters__heading {
+  padding-left: 20px;
+}
+.filters::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: $color-interfaceBorder;
+}
+
+.filters__minimize-button {
+  width: 70px;
+  padding: 3px 3px;
+  border-radius: $interfaceBorderRadius;
+  position: relative;
+  transition: background-color 0.2s ease;
+  display: flex;
+  gap: 3px;
+  cursor: pointer;
+  .minimize-button__icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+  }
+}
+.filters_open {
+  .filters__minimize-button {
+    .minimize-button__icon {
+      transform: rotate(180deg);
+      transform-origin: center;
+    }
+  }
+  height: 90px;
+}
+.filters__list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.filters__filter {
+  border: $border-interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  padding: 3px 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+  .filter__icon {
+    position: absolute;
+    height: 80%;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 4px;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+}
+.filters__filter_selected {
+  .filter__icon {
+    opacity: 1;
+  }
+}
+
+@media (hover: hover) {
+  .filters__minimize-button:hover {
+    background-color: $color-interfaceBackgroundHovered;
+  }
+  .filters__filter:hover {
+    background-color: $color-interfaceBackgroundHovered;
+  }
+}

@@ -11,6 +11,12 @@ import crossIcon from "./assets/cross-icon.svg";
 export class SearchLineView extends View {
   private userListView: UserListView;
 
+  private input: HTMLInputElement;
+
+  private clearButton: HTMLElement;
+
+  private searchButton: HTMLElement;
+
   constructor(cssClasses: string[], userListView: UserListView) {
     const SEARCH_LINE_PARAMS: ElementParametrs = {
       tag: "div",
@@ -18,10 +24,12 @@ export class SearchLineView extends View {
     };
     super(SEARCH_LINE_PARAMS);
     this.userListView = userListView;
-    this.configureView();
+    [this.input, this.clearButton, this.searchButton] = this.configureView();
+    this.searchButtonOnClick();
+    this.clearButtonOnClick();
   }
 
-  private configureView(): void {
+  private configureView(): [HTMLInputElement, HTMLElement, HTMLElement] {
     const searchLineInput = new ElementCreator({
       tag: "input",
       cssClasses: ["search-line__input"],
@@ -61,5 +69,24 @@ export class SearchLineView extends View {
       searchLineClearButton.getElement(),
       searchLineSearchButton.getElement(),
     );
+    return [
+      searchLineInput.getElement() as HTMLInputElement,
+      searchLineClearButton.getElement(),
+      searchLineSearchButton.getElement(),
+    ];
+  }
+
+  private searchButtonOnClick(): void {
+    this.searchButton.addEventListener("click", () => {
+      const text = this.input.value;
+      this.userListView.filterByName(text);
+    });
+  }
+
+  private clearButtonOnClick(): void {
+    this.clearButton.addEventListener("click", () => {
+      this.userListView.stopFilterByName();
+      this.input.value = "";
+    });
   }
 }

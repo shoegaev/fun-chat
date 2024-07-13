@@ -57,18 +57,26 @@ export class ServerCallbacksCreator {
       {
         type: ResType.externalLogin,
         callback: (userLogin: string) => {
-          const userView = this.indexPageView.userSelectorView.userListView.findUser(userLogin);
+          const userView =
+            this.indexPageView.userSelectorView.userListView.findUser(
+              userLogin,
+            );
           if (userView) {
             userView.setOnlineStatus();
           } else {
-            this.indexPageView.userSelectorView.userListView.addUser(userLogin);
+            this.indexPageView.userSelectorView.userListView
+              .addUser(userLogin)
+              .setOnlineStatus();
           }
         },
       },
       {
         type: ResType.externalLogout,
         callback: (userLogin: string) => {
-          const userView = this.indexPageView.userSelectorView.userListView.findUser(userLogin);
+          const userView =
+            this.indexPageView.userSelectorView.userListView.findUser(
+              userLogin,
+            );
           userView?.removeOnlineStatus();
         },
       },

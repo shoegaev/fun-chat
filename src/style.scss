@@ -8,8 +8,7 @@
 }
 
 .hidden {
-  opacity: 0;
-  visibility: hidden;
+  @include hidden;
 }
 body {
   color: $color-text;
@@ -33,9 +32,8 @@ body {
 .button.button_selected {
   border: $border-interfaceBorderFocus;
   color: $color-interfaceBorderIntence;
-
 }
-@media (hover: hover){
+@media (hover: hover) {
   .button:hover {
     background-color: $color-interfaceBackgroundHovered;
   }
@@ -43,7 +41,7 @@ body {
     background-color: transparent;
   }
 }
-@media (hover: none){
+@media (hover: none) {
   .button:active {
     background-color: $color-interfaceBackgroundHovered;
   }

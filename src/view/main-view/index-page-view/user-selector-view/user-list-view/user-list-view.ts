@@ -1,16 +1,13 @@
 import { View } from "../../../../../util/view";
 import { ElementParametrs } from "../../../../../util/element-creator";
 import { Router, Pages } from "../../../../../router/router";
-import { UserView } from "../user-view/user-view";
+import { UserView, Users } from "../user-view/user-view";
 import "./user-list-style.scss";
 
 export class UserListView extends View {
-  private users: {
-    selectedUser: null | UserView;
-    arr: UserView[];
-  };
+  private users: Users;
 
-  router: Router;
+  private router: Router;
 
   constructor(cssClasses: string[], router: Router) {
     const USER_LIST_PARAMS: ElementParametrs = {
@@ -21,7 +18,9 @@ export class UserListView extends View {
     this.router = router;
     this.users = {
       selectedUser: null,
-      arr: [],
+      userArr: [],
+      onlineUserArr: [],
+      unreadUserArr: [],
     };
   }
 
@@ -29,7 +28,9 @@ export class UserListView extends View {
     this.getHtmlElement().innerHTML = "";
     this.users = {
       selectedUser: null,
-      arr: [],
+      userArr: [],
+      onlineUserArr: [],
+      unreadUserArr: [],
     };
   }
 
@@ -42,12 +43,46 @@ export class UserListView extends View {
         this.router.navigate({ page: Pages.index, resource: login });
       },
     });
-    this.users.arr.push(user);
+    this.users.userArr.push(user);
     this.getHtmlElement().append(user.getHtmlElement());
     return user;
   }
 
   public findUser(login: string): UserView | undefined {
-    return this.users.arr.find((userView) => userView.params.login === login);
+    return this.users.userArr.find(
+      (userView) => userView.params.login === login,
+    );
+  }
+
+  // public removeFilters(): void {
+  //   // Добваить в свойство users массив с
+  //   // спрятанными (из за какого-либо фильтра) юзерами
+  // }
+
+  public filterByStatus() {
+    this.getHtmlElement().classList.add("user-list_online-filter");
+  }
+
+  public stopFilterByStatus() {
+    this.getHtmlElement().classList.remove("user-list_online-filter");
+  }
+
+  public filterByName(text: string): void {
+    this.users.userArr.forEach((user) => {
+      if (
+        user.params.login.slice(0, text.length).toLowerCase() !==
+        text.toLowerCase()
+      ) {
+        user.getHtmlElement().classList.add("user_filtered-by-name");
+      } else {
+        user.getHtmlElement().classList.remove("user_filtered-by-name");
+      }
+    });
+  }
+
+  public stopFilterByName(): void {
+    this.users.userArr.forEach((user) => {
+      user.getHtmlElement().classList.remove("user_filtered-by-name");
+    });
   }
 }
