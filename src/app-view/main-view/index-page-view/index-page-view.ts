@@ -43,7 +43,10 @@ export class IndexPageView extends View {
   }
 
   private createUserSelectorView(): UserSelectorView {
-    const userList = new UserSelectorView(["index-page__users-list"], this.router);
+    const userList = new UserSelectorView(
+      ["index-page__users-list"],
+      this.router,
+    );
     this.content.append(userList.getHtmlElement());
     return userList;
   }

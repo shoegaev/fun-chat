@@ -1,5 +1,5 @@
-import { AppView } from "../view/app-view";
-import { IndexPageView } from "../view/main-view/index-page-view/index-page-view";
+import { AppView } from "../app-view/app-view";
+import { IndexPageView } from "../app-view/main-view/index-page-view/index-page-view";
 import { Router, Pages } from "../router/router";
 import {
   ServerErrCallback,

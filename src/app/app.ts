@@ -5,7 +5,7 @@ import {
 } from "../connection/types/server-callbacks-types";
 import { Router, Route, Pages } from "../router/router";
 import { State } from "../state/state";
-import { AppView } from "../view/app-view";
+import { AppView } from "../app-view/app-view";
 import { ServerCallbacksCreator } from "../server-callbacks-creator/server-callbacks-creator";
 
 export class App {
