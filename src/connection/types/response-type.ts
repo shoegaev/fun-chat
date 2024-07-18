@@ -5,7 +5,7 @@ export interface LoginRes extends ServerRes {
   payload: {
     user: {
       login: string;
-      password: string;
+      isLogined: boolean;
     };
   };
 }

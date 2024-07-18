@@ -75,7 +75,6 @@ export class App {
             return;
           }
           this.setPage(Pages.index);
-          this.connection.sender.getUserList();
         },
       },
       {
@@ -83,7 +82,9 @@ export class App {
         page: Pages.login,
         callback: () => {
           this.setPage(Pages.login);
-          // при переходе из index отправить запрос на сервер о выходе юзера из сети
+          if (this.connection.isUserAuthorized()) {
+            this.connection.sender.logaut();
+          }
         },
       },
       {

@@ -5,9 +5,16 @@ export class Sender {
 
   private loadingWindowView: LoadingWindowView;
 
-  constructor(socketArr: WebSocket[], loaddingWindowView: LoadingWindowView) {
+  private authorizedUser: [{ login: string; password: string } | null];
+
+  constructor(
+    socketArr: WebSocket[],
+    loaddingWindowView: LoadingWindowView,
+    authorizedUser: [{ login: string; password: string } | null],
+  ) {
     this.socketArr = socketArr;
     this.loadingWindowView = loaddingWindowView;
+    this.authorizedUser = authorizedUser;
   }
 
   private getSocket(): WebSocket {
@@ -16,7 +23,7 @@ export class Sender {
 
   public login(login: string, password: string): void {
     const request = {
-      id: "login",
+      id: `login ${login} ${password}`,
       type: "USER_LOGIN",
       payload: {
         user: {
@@ -27,6 +34,23 @@ export class Sender {
     };
     this.getSocket().send(JSON.stringify(request));
     this.loadingWindowView.show();
+  }
+
+  public logaut(): void {
+    if (!this.authorizedUser[0]) {
+      throw new Error("there is no authorized user");
+    }
+    const request = {
+      id: "logaut",
+      type: "USER_LOGOUT",
+      payload: {
+        user: {
+          login: this.authorizedUser[0].login,
+          password: this.authorizedUser[0].password,
+        },
+      },
+    };
+    this.getSocket().send(JSON.stringify(request));
   }
 
   public getUserList(): void {

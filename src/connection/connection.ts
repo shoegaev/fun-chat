@@ -3,7 +3,10 @@ import { LoadingWindowView } from "./loading-window-view/loading-window-view";
 import { Sender } from "./sender/sender";
 import { Receiver } from "./receiver/receiver";
 import { SomeServerResponse } from "./types/response-type";
-import { SomeServerCallback, ServerErrCallback } from "./types/server-callbacks-types";
+import {
+  SomeServerCallback,
+  ServerErrCallback,
+} from "./types/server-callbacks-types";
 import {
   SomeServerErrResponse,
   LoginErrResponse,
@@ -23,7 +26,7 @@ export class Connection {
 
   private receiver: Receiver;
 
-  public authorizedUser: { login: string; password: string } | null;
+  public authorizedUser: [{ login: string; password: string } | null];
 
   constructor(
     state: State,
@@ -34,17 +37,21 @@ export class Connection {
     this.socketArr = [];
     this.loadingWindow = this.createLoadingWindow();
     this.connectionAttempt = 1;
-    this.sender = new Sender(this.socketArr, this.loadingWindow);
+    this.authorizedUser = [null];
+    this.sender = new Sender(
+      this.socketArr,
+      this.loadingWindow,
+      this.authorizedUser,
+    );
     this.receiver = new Receiver(
       this.socketArr,
       serverCallbacks,
       serverErrCallbacks,
     );
-    this.authorizedUser = null;
   }
 
   public isUserAuthorized(): boolean {
-    return Boolean(this.authorizedUser);
+    return Boolean(this.authorizedUser[0]);
   }
 
   public startConnection(): void {
@@ -102,20 +109,18 @@ export class Connection {
   private handleUserAuthorizationStatus(
     data: SomeServerErrResponse | SomeServerResponse,
   ): void {
-    if (data.type === "USER_LOGIN" && !this.authorizedUser) {
-      this.authorizedUser = {
+    if (data.type === "USER_LOGIN" && !this.authorizedUser[0]) {
+      this.authorizedUser[0] = {
         login: data.payload.user.login,
-        password: data.payload.user.password,
+        password: data.id.split(" ")[2],
       };
       this.loadingWindow.hide();
     } else if (data.type === "USER_LOGOUT" && this.authorizedUser) {
-      this.authorizedUser = null;
+      this.authorizedUser[0] = null;
     }
   }
 
-  private showAuthenticationErrorMessage(
-    response: LoginErrResponse,
-  ) {
+  private showAuthenticationErrorMessage(response: LoginErrResponse) {
     this.loadingWindow.error(response.payload.error);
   }
 }

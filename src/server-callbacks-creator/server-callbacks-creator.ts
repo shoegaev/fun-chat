@@ -38,21 +38,30 @@ export class ServerCallbacksCreator {
   }
 
   public createCallbacks(): void {
-    this.createAuthorizationCallbacks();
-    this.createExtendedUserAuthetificationCallbacks();
+    this.createAutheticationCallbacks();
+    this.createExtendedUserAutheticationCallbacks();
     this.gettingUserListCallback();
   }
 
-  private createAuthorizationCallbacks(): void {
+  private createAutheticationCallbacks(): void {
     this.serverCallbacks.push({
       type: ResType.login,
       callback: () => {
+        this.connection.sender.getUserList();
         this.router.navigate({ page: Pages.index });
+      },
+    });
+    this.serverCallbacks.push({
+      type: ResType.logout,
+      callback: () => {
+        // -----------------
+        // clear index page
+        // -----------------
       },
     });
   }
 
-  private createExtendedUserAuthetificationCallbacks(): void {
+  private createExtendedUserAutheticationCallbacks(): void {
     this.serverCallbacks.push(
       {
         type: ResType.externalLogin,
@@ -89,7 +98,7 @@ export class ServerCallbacksCreator {
       list: { login: string; isLogined: boolean }[],
     ): void => {
       list.forEach((user) => {
-        if (user.login === this.connection.authorizedUser?.login) {
+        if (user.login === this.connection.authorizedUser[0]?.login) {
           return;
         }
         const userView = userListView.addUser(user.login);

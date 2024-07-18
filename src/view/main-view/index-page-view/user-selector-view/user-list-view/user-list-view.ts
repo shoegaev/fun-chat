@@ -48,6 +48,11 @@ export class UserListView extends View {
     return user;
   }
 
+  public selectUser(login: string): void {
+    const userView = this.findUser(login);
+    userView?.setSelectedStatus();
+  }
+
   public findUser(login: string): UserView | undefined {
     return this.users.userArr.find(
       (userView) => userView.params.login === login,
@@ -55,7 +60,7 @@ export class UserListView extends View {
   }
 
   // public removeFilters(): void {
-  //   // Добваить в свойство users массив с
+  //   // Добавить в свойство users массив с
   //   // спрятанными (из за какого-либо фильтра) юзерами
   // }
 
