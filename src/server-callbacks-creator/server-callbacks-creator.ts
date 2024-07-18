@@ -5,7 +5,9 @@ import {
   ServerErrCallback,
   SomeServerCallback,
 } from "../connection/types/server-callbacks-types";
+import { LoginErrMessages } from "../connection/types/error-response-types";
 import { Connection } from "../connection/connection";
+import { LoadingWindowView } from "../loading-window-view/loading-window-view";
 import { ResType } from "../connection/types/global-response-types";
 
 export class ServerCallbacksCreator {
@@ -14,6 +16,8 @@ export class ServerCallbacksCreator {
   private serverErrCallbacks: ServerErrCallback[];
 
   private appView: AppView;
+
+  private loadingWindowView: LoadingWindowView;
 
   private indexPageView: IndexPageView;
 
@@ -25,12 +29,14 @@ export class ServerCallbacksCreator {
     serverCallbacks: SomeServerCallback[],
     serverErrCallbacks: ServerErrCallback[],
     appView: AppView,
+    loadingWindowView: LoadingWindowView,
     router: Router,
     connection: Connection,
   ) {
     this.serverCallbacks = serverCallbacks;
     this.serverErrCallbacks = serverErrCallbacks;
     this.appView = appView;
+    this.loadingWindowView = loadingWindowView;
     this.indexPageView = appView.mainView.indexPageView;
     this.router = router;
     this.connection = connection;
@@ -38,26 +44,41 @@ export class ServerCallbacksCreator {
   }
 
   public createCallbacks(): void {
-    this.createAutheticationCallbacks();
+    this.createAuthenticationCallbacks();
+    this.createAuthenticationErrCallbacks();
     this.createExtendedUserAutheticationCallbacks();
     this.gettingUserListCallback();
   }
 
-  private createAutheticationCallbacks(): void {
-    this.serverCallbacks.push({
-      type: ResType.login,
-      callback: () => {
-        this.connection.sender.getUserList();
-        this.router.navigate({ page: Pages.index });
+  private createAuthenticationCallbacks(): void {
+    this.serverCallbacks.push(
+      {
+        type: ResType.login,
+        callback: () => {
+          this.loadingWindowView.hide();
+          this.connection.sender.getUserList();
+          this.router.navigate({ page: Pages.index });
+        },
       },
-    });
-    this.serverCallbacks.push({
-      type: ResType.logout,
-      callback: () => {
-        // -----------------
-        // clear index page
-        // -----------------
+      {
+        type: ResType.logout,
+        callback: () => {
+          // -----------------
+          // clear index page
+          // -----------------
+        },
       },
+    );
+  }
+
+  private createAuthenticationErrCallbacks(): void {
+    Object.values(LoginErrMessages).forEach((message) => {
+      this.serverErrCallbacks.push({
+        error: message,
+        callback: () => {
+          this.loadingWindowView.error(message);
+        },
+      });
     });
   }
 

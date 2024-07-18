@@ -7,6 +7,7 @@ import { Router, Route, Pages } from "../router/router";
 import { State } from "../state/state";
 import { AppView } from "../app-view/app-view";
 import { ServerCallbacksCreator } from "../server-callbacks-creator/server-callbacks-creator";
+import { LoadingWindowView } from "../loading-window-view/loading-window-view";
 
 export class App {
   private state: State;
@@ -14,6 +15,8 @@ export class App {
   private connection: Connection;
 
   private appView: AppView;
+
+  private loadingWindowView: LoadingWindowView;
 
   private router: Router;
 
@@ -24,12 +27,18 @@ export class App {
   constructor() {
     this.serverCallbacks = [];
     this.serverErrCallbacks = [];
-    [this.state, this.connection, this.appView, this.router] =
-      this.createComponents();
+    [
+      this.state,
+      this.connection,
+      this.appView,
+      this.loadingWindowView,
+      this.router,
+    ] = this.createComponents();
     const callbackCreator = new ServerCallbacksCreator(
       this.serverCallbacks,
       this.serverErrCallbacks,
       this.appView,
+      this.loadingWindowView,
       this.router,
       this.connection,
     );
@@ -40,17 +49,29 @@ export class App {
     this.connection.startConnection();
   }
 
-  private createComponents(): [State, Connection, AppView, Router] {
+  private createComponents(): [
+    State,
+    Connection,
+    AppView,
+    LoadingWindowView,
+    Router,
+    // eslint-disable-next-line indent
+  ] {
     const state = new State();
+    const loadingWindowView = new LoadingWindowView();
     const connection = new Connection(
       state,
+      loadingWindowView,
       this.serverCallbacks,
       this.serverErrCallbacks,
     );
     const router = new Router(this.getRoutes());
     const view = new AppView(connection, router);
-    document.body.append(view.getHtmlElement());
-    return [state, connection, view, router];
+    document.body.append(
+      view.getHtmlElement(),
+      loadingWindowView.getHtmlElement(),
+    );
+    return [state, connection, view, loadingWindowView, router];
   }
 
   private setPage(Page: Pages) {

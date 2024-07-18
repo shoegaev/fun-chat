@@ -1,5 +1,5 @@
-import { View } from "../../util/view";
-import { ElementParametrs } from "../../util/element-creator";
+import { View } from "../util/view";
+import { ElementParametrs } from "../util/element-creator";
 import "./loading-window-style.scss";
 
 export class LoadingWindowView extends View {

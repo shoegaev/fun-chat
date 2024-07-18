@@ -7,7 +7,7 @@ export interface ServerErrRes extends ServerRes {
   };
 }
 
-export enum LoginErrMessage {
+export enum LoginErrMessages {
   loginInUse = "a user with this login is already authorized",
   wrongPassword = "incorrect password",
   alreadyAuthorized = "another user is already authorized in this connection",
@@ -16,11 +16,11 @@ export enum LoginErrMessage {
 export interface LoginErrResponse extends ServerErrRes {
   id: "login";
   payload: {
-    error: LoginErrMessage;
+    error: LoginErrMessages;
   };
 }
 
-export enum LogautErrMessage {
+export enum LogautErrMessages {
   wrongLogin = "there is no user with this login",
   wrongPassword = "incorrect password",
   notAuthorized = "the user was not authorized",
@@ -29,7 +29,7 @@ export enum LogautErrMessage {
 export interface LogautErrResponse extends ServerErrRes {
   id: "logaut";
   payload: {
-    error: LogautErrMessage;
+    error: LogautErrMessages;
   };
 }
 

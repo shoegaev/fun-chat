@@ -1,4 +1,4 @@
-import { LoadingWindowView } from "../loading-window-view/loading-window-view";
+import { LoadingWindowView } from "../../loading-window-view/loading-window-view";
 
 export class Sender {
   private socketArr: WebSocket[];
