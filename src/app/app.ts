@@ -87,17 +87,7 @@ export class App {
 
   private getRoutes(): Route[] {
     const routes: Route[] = [
-      {
-        hasResource: true,
-        page: Pages.index,
-        callback: () => {
-          if (!this.connection.isUserAuthorized()) {
-            this.router.navigate({ page: Pages.login });
-            return;
-          }
-          this.setPage(Pages.index);
-        },
-      },
+      this.getIndexPageRoute(),
       {
         hasResource: false,
         page: Pages.login,
@@ -124,5 +114,36 @@ export class App {
       },
     ];
     return routes;
+  }
+
+  private getIndexPageRoute(): Route {
+    const route: Route = {
+      hasResource: true,
+      page: Pages.index,
+      callback: (resource) => {
+        const indexPageView = this.appView.mainView.indexPageView;
+        const userListView = indexPageView.userSelectorView.userListView;
+        const messengerInterfaceView = indexPageView.messengerInterfaceView;
+        if (!this.connection.isUserAuthorized()) {
+          this.router.navigate({ page: Pages.login });
+          return;
+        }
+        this.setPage(Pages.index);
+        if (resource) {
+          const userView = userListView.findUser(resource);
+          if (userView) {
+            messengerInterfaceView.openMessageHistory(resource);
+            userView.setSelectedStatus();
+          } else {
+            this.router.navigate({ page: Pages.login });
+          }
+        } else {
+          userListView.users.selectedUser?.removeSelectedStatus();
+          messengerInterfaceView.closeMessageHistory();
+          return;
+        }
+      },
+    };
+    return route;
   }
 }

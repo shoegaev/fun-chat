@@ -21,10 +21,8 @@ export class Router {
 
   constructor(routes: Route[]) {
     this.routes = routes;
-    ["popstate", "hashchange"].forEach((str) => {
-      window.addEventListener(str, () => {
-        this.navigate();
-      });
+    window.addEventListener("popstate", () => {
+      this.navigate();
     });
     document.addEventListener("DOMContentLoaded", () => {
       this.navigate();
@@ -53,19 +51,19 @@ export class Router {
       null,
       "",
       urlParams.resource
-        ? `/${urlParams.page}/${urlParams.resource}`
+        ? `/${urlParams.page}#${urlParams.resource}`
         : `/${urlParams.page}`,
     );
   }
 
-  private parseCurrentUrl(): { page: string; resource?: string } {
+  private parseCurrentUrl(): { page: string; resource: string } {
     const path = window.location.pathname.slice(1);
+    const resource = window.location.hash.slice(1);
     if (path === "") {
       this.pushState({ page: Pages.login });
-      return { page: Pages.login };
+      return { page: Pages.login, resource: "" };
     }
-    const pathArr = path.split("/");
-    return { page: pathArr[0], resource: pathArr[1] };
+    return { page: path, resource: resource };
   }
 
   private redirectToNotFoundPage(): void {

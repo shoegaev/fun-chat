@@ -63,9 +63,13 @@ export class ServerCallbacksCreator {
       {
         type: ResType.logout,
         callback: () => {
-          // -----------------
-          // clear index page
-          // -----------------
+          const userSelectorView = this.indexPageView.userSelectorView;
+          userSelectorView.userListView.clearList();
+          userSelectorView.userListView.removeAllFilters();
+          userSelectorView.filtersView.unselectAllFilters();
+          userSelectorView.filtersView.minimizeFilters();
+          this.indexPageView.userSelectorView.searchLineView.clearInput();
+          this.indexPageView.messengerInterfaceView.closeMessageHistory();
         },
       },
     );

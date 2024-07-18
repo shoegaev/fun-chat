@@ -1,22 +1,87 @@
 import { View } from "../../../../util/view";
-import { ElementParametrs } from "../../../../util/element-creator";
+import {
+  ElementCreator,
+  ElementParametrs,
+} from "../../../../util/element-creator";
 import { Router } from "../../../../router/router";
+import { Connection } from "../../../../connection/connection";
+import { MessageHistoryView } from "./message-history-view/message-history-view";
+import { MessageInputFieldView } from "./message-input-panel-view/message-input-panel-view";
 
 export class MessengerInterfaceView extends View {
-  router: Router;
+  private router: Router;
 
-  constructor(cssClasses: string[], router: Router) {
+  private connection: Connection;
+
+  private readonly messageHistoryArr: [MessageHistoryView | null];
+
+  private messageHistoryContainer: HTMLElement;
+
+  constructor(cssClasses: string[], router: Router, connection: Connection) {
     const MESSENGER_INTERFACE_PARAMS: ElementParametrs = {
       tag: "div",
-      cssClasses: ["messenger-interface", ...cssClasses],
+      cssClasses: [
+        "messenger-interface",
+        "messenger-interface_user-not-selected",
+        ...cssClasses,
+      ],
     };
     super(MESSENGER_INTERFACE_PARAMS);
     this.router = router;
-    this.configureView();
+    this.connection = connection;
+    this.messageHistoryArr = [null];
+    [this.messageHistoryContainer] = this.configureView();
   }
 
-  private configureView(): void {
-    const innerElementParams: ElementParametrs[] = [];
-    this.addInnerElements(innerElementParams);
+  public openMessageHistory(login: string): void {
+    this.messageHistoryArr[0]?.removeView();
+    const messageHistoryView = new MessageHistoryView(
+      ["messenger-interface__message_history"],
+      login,
+      this.connection,
+    );
+    this.messageHistoryContainer.append(messageHistoryView.getHtmlElement());
+    this.removeUserNotSelectedClass();
+    this.messageHistoryArr[0] = messageHistoryView;
+  }
+
+  public closeMessageHistory(): void {
+    this.messageHistoryArr[0]?.removeView();
+    this.addUserNotSelectedClass();
+  }
+
+  private removeUserNotSelectedClass(): void {
+    this.getHtmlElement().classList.remove(
+      "messenger-interface_user-not-selected",
+    );
+  }
+
+  private addUserNotSelectedClass(): void {
+    this.getHtmlElement().classList.add(
+      "messenger-interface_user-not-selected",
+    );
+  }
+
+  private configureView(): HTMLElement[] {
+    const messageHistoryContainer = new ElementCreator({
+      tag: "div",
+      cssClasses: ["messenger-interface__history-container"],
+    });
+    const messageHistoryPlaceholder = new ElementCreator({
+      tag: "span",
+      cssClasses: ["messenger-interface__message-history-placeholder"],
+      textContent: "Select user to start conversation",
+    });
+    messageHistoryContainer.apendInnerElements(messageHistoryPlaceholder);
+    const messageInputField = new MessageInputFieldView(
+      ["messenger-interface__message-input-field"],
+      this.connection,
+      this.messageHistoryArr,
+    );
+    this.viewCreator.apendInnerElements(
+      messageHistoryContainer,
+      messageInputField.getHtmlElement(),
+    );
+    return [messageHistoryContainer.getElement()];
   }
 }

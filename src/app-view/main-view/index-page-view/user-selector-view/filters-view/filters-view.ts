@@ -30,6 +30,20 @@ export class FiltersView extends View {
     this.filtersOnClick();
   }
 
+  public unselectAllFilters(): void {
+    [this.onlineFilter, this.unreadFilter].forEach((filter) => {
+      filter.classList.remove("filters__filter_selected");
+    });
+  }
+
+  public minimizeFilters(): void {
+    this.getHtmlElement().classList.remove("filters_open");
+  }
+
+  public showFilters(): void {
+    this.getHtmlElement().classList.add("filters_open");
+  }
+
   private configureView(): HTMLElement[] {
     const minimizeButton = new ElementCreator({
       tag: "div",
@@ -94,9 +108,9 @@ export class FiltersView extends View {
   private minimizeButtonOnClick(): void {
     this.minimizeButton.addEventListener("click", () => {
       if (this.getHtmlElement().classList.contains("filters_open")) {
-        this.getHtmlElement().classList.remove("filters_open");
+        this.minimizeFilters();
       } else {
-        this.getHtmlElement().classList.add("filters_open");
+        this.showFilters();
       }
     });
   }

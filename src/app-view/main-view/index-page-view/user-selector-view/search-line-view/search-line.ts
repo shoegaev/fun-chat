@@ -29,6 +29,10 @@ export class SearchLineView extends View {
     this.clearButtonOnClick();
   }
 
+  public clearInput(): void {
+    this.input.value = "";
+  }
+
   private configureView(): [HTMLInputElement, HTMLElement, HTMLElement] {
     const searchLineInput = new ElementCreator({
       tag: "input",
@@ -86,7 +90,7 @@ export class SearchLineView extends View {
   private clearButtonOnClick(): void {
     this.clearButton.addEventListener("click", () => {
       this.userListView.stopFilterByName();
-      this.input.value = "";
+      this.clearInput();
     });
   }
 }

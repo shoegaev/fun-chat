@@ -55,6 +55,7 @@ export class IndexPageView extends View {
     const messengerInterface = new MessengerInterfaceView(
       ["index-page__messenger-interface"],
       this.router,
+      this.connection,
     );
     this.content.append(messengerInterface.getHtmlElement());
     return messengerInterface;

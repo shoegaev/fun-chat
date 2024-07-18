@@ -5,7 +5,7 @@ import { UserView, Users } from "../user-view/user-view";
 import "./user-list-style.scss";
 
 export class UserListView extends View {
-  private users: Users;
+  public users: Users;
 
   private router: Router;
 
@@ -59,10 +59,10 @@ export class UserListView extends View {
     );
   }
 
-  // public removeFilters(): void {
-  //   // Добавить в свойство users массив с
-  //   // спрятанными (из за какого-либо фильтра) юзерами
-  // }
+  public removeAllFilters(): void {
+    this.stopFilterByStatus();
+    this.stopFilterByName();
+  }
 
   public filterByStatus() {
     this.getHtmlElement().classList.add("user-list_online-filter");

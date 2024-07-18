@@ -37,6 +37,11 @@ export class UserView extends View {
     this.params = params;
     this.unreadMessagesNumber = 0;
     [this.status, this.unreadMessages] = this.connfigureView(params.login);
+    this.getHtmlElement().addEventListener("click", () => {
+      if (!(this.params.users.selectedUser === this)) {
+        params.callback();
+      }
+    });
   }
 
   public isUserHaveThisLogin(login: string) {
@@ -45,6 +50,8 @@ export class UserView extends View {
 
   public setSelectedStatus(): void {
     this.getHtmlElement().classList.add("user_selected");
+    this.params.users.selectedUser?.removeSelectedStatus();
+    this.params.users.selectedUser = this;
   }
 
   public removeSelectedStatus(): void {
@@ -92,18 +99,6 @@ export class UserView extends View {
       loginText.getElement(),
       unreadMessages.getElement(),
     );
-    this.setOnClick();
     return [status.getElement(), unreadMessages.getElement()];
-  }
-
-  private setOnClick(): void {
-    this.getHtmlElement().addEventListener("click", () => {
-      if (this.params.users.selectedUser === this) {
-        return;
-      }
-      this.setSelectedStatus();
-      this.params.users.selectedUser?.removeSelectedStatus();
-      this.params.users.selectedUser = this;
-    });
   }
 }
