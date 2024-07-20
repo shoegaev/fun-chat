@@ -31,6 +31,13 @@ export class LoginPageView extends View {
     this.buttonOnClick();
   }
 
+  public clearInputs(): void {
+    this.innerFields.forEach((field) => {
+      field.clearInput();
+    });
+    this.changeButtonStatus();
+  }
+
   configureView(): void {
     const innerElementsParams: ElementParametrs[] = [
       {

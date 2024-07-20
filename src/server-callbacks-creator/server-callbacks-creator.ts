@@ -56,6 +56,7 @@ export class ServerCallbacksCreator {
         type: ResType.login,
         callback: () => {
           this.loadingWindowView.hide();
+          this.appView.mainView.loginPageView.clearInputs();
           this.connection.sender.getUserList();
           this.router.navigate({ page: Pages.index });
         },

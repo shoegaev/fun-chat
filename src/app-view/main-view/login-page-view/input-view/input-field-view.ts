@@ -36,6 +36,13 @@ export class InputFieldView extends View {
     this.configureView();
   }
 
+  public clearInput(): void {
+    if (this.input) {
+      this.input.value = "";
+      this.input?.dispatchEvent(new Event("input"));
+    }
+  }
+
   private configureView(): void {
     const innerElementsParams: ElementParametrs[] = [
       {
