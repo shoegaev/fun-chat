@@ -1,0 +1,35 @@
+@import "../../../../../../variables.scss";
+
+.message {
+  display: grid;
+  grid-template-columns: 50px calc(100% - 50px);
+  gap: 3px;
+  position: relative;
+  margin-top: 20px;
+  .message__header {
+    position: absolute;
+    top: -13px;
+    display: flex;
+    gap: 3px;
+    font-size: 0.8em;
+    opacity: 0.7;
+    height: 13px;
+    .message__edit-button {
+      height: 100%;
+      cursor: pointer;
+      .message__edit-button-icon {
+        height: 90%;
+      }
+    }
+  }
+  @media (hover: hover){
+    .message__edit-button:hover {
+      background-color: green;
+    }
+  }
+  .message__text {
+    // border: $border-interfaceBorder;
+    // border-radius: $interfaceBorderRadius;
+    // padding: 3px;
+  }
+}

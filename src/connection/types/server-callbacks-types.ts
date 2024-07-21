@@ -1,4 +1,5 @@
 import { SomeServerErrResponse } from "./error-response-types";
+import { MessageData } from "./message-data-type";
 import { ResType } from "./global-response-types";
 
 export type ServerCallback = { type: ResType };
@@ -33,9 +34,7 @@ export interface UserLogoutCallback extends ServerCallback {
   callback: () => void;
 }
 
-export type UserAuthenticationCallback =
-  | UserLoginCallback
-  | UserLogoutCallback;
+export type UserAuthenticationCallback = UserLoginCallback | UserLogoutCallback;
 
 // getting users list
 export interface UserListCallback extends ServerCallback {
@@ -43,7 +42,20 @@ export interface UserListCallback extends ServerCallback {
   callback: (list: { login: string; isLogined: boolean }[]) => void;
 }
 
+// message
+export interface MessageCallback extends ServerCallback {
+  type: ResType.message;
+  callback: (data: MessageData) => void;
+}
+
+export interface MessageHistoryCallback extends ServerCallback {
+  type: ResType.messageHistory;
+  callback: (arr: MessageData[]) => void;
+}
+
 export type SomeServerCallback =
   | ServerExternalUserCallback
   | UserAuthenticationCallback
-  | UserListCallback;
+  | UserListCallback
+  | MessageCallback
+  | MessageHistoryCallback;

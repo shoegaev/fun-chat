@@ -9,6 +9,7 @@ import { LoginErrMessages } from "../connection/types/error-response-types";
 import { Connection } from "../connection/connection";
 import { LoadingWindowView } from "../loading-window-view/loading-window-view";
 import { ResType } from "../connection/types/global-response-types";
+import { MessageData } from "../connection/types/message-data-type";
 
 export class ServerCallbacksCreator {
   private serverCallbacks: SomeServerCallback[];
@@ -47,7 +48,8 @@ export class ServerCallbacksCreator {
     this.createAuthenticationCallbacks();
     this.createAuthenticationErrCallbacks();
     this.createExtendedUserAutheticationCallbacks();
-    this.gettingUserListCallback();
+    this.createGettingUserListCallback();
+    this.createMessageCallbacks();
   }
 
   private createAuthenticationCallbacks(): void {
@@ -118,7 +120,7 @@ export class ServerCallbacksCreator {
     );
   }
 
-  private gettingUserListCallback(): void {
+  private createGettingUserListCallback(): void {
     const userListView = this.indexPageView.userSelectorView.userListView;
     const userListCallback = (
       list: { login: string; isLogined: boolean }[],
@@ -141,6 +143,30 @@ export class ServerCallbacksCreator {
       {
         type: ResType.inactiveUserList,
         callback: userListCallback,
+      },
+    );
+  }
+
+  private createMessageCallbacks(): void {
+    const addMessageToList = (data: MessageData): void => {
+      this.indexPageView.messengerInterfaceView
+        .getCurrentMessageHistoriView()
+        ?.addMessage(data);
+    };
+    this.serverCallbacks.push(
+      {
+        type: ResType.message,
+        callback: (messageData) => {
+          addMessageToList(messageData);
+        },
+      },
+      {
+        type: ResType.messageHistory,
+        callback: (messageDataArr): void => {
+          messageDataArr.forEach((messageData) => {
+            addMessageToList(messageData);
+          });
+        },
       },
     );
   }

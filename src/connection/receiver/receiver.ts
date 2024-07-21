@@ -3,7 +3,9 @@ import {
   ServerExternalUserCallback,
   ServerErrCallback,
   SomeServerCallback,
-  UserListCallback
+  UserListCallback,
+  MessageCallback,
+  MessageHistoryCallback,
 } from "../types/server-callbacks-types";
 import { SomeServerResponse } from "../types/response-type";
 import { SomeServerErrResponse } from "../types/error-response-types";
@@ -73,9 +75,11 @@ export class Receiver {
       data.type === ResType.activeUserList ||
       data.type === ResType.inactiveUserList
     ) {
-      (
-        callback as UserListCallback
-      ).callback(data.payload.users);
+      (callback as UserListCallback).callback(data.payload.users);
+    } else if (data.type === ResType.message) {
+      (callback as MessageCallback).callback(data.payload.message);
+    } else if (data.type === ResType.messageHistory) {
+      (callback as MessageHistoryCallback).callback(data.payload.messages);
     } else {
       (callback as UserAuthenticationCallback).callback();
     }

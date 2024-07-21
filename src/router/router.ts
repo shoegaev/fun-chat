@@ -1,3 +1,4 @@
+
 export enum Pages {
   index = "index",
   info = "info",

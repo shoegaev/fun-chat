@@ -1,0 +1,45 @@
+@import "../../../../variables.scss";
+
+.messenger-interface {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.messenger-interface__history-container {
+  width: 100%;
+  height: 80%;
+  border: $border-interfaceBorder;
+  background-color: $color-interfaceBackgroundHovered;
+  border-radius: $interfaceBorderRadius;
+  position: relative;
+}
+.messenger-interface__message-history {
+  width: 100%;
+  height: 100%;
+}
+
+.messenger-interface__message-history-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  visibility: hidden;
+}
+
+.messenger-interface.messenger-interface_user-not-selected {
+  .messenger-interface__message-history-placeholder {
+    visibility: visible;
+  }
+}
+
+.messenger-interface__message-input-field {
+  height: 20%;
+  width: 100%;
+  background-color: $color-interfaceBackgroundHovered;
+  border: $border-interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+}

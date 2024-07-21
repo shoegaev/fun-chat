@@ -1,4 +1,5 @@
 import { ServerRes, ResType } from "./global-response-types";
+import { MessageData } from "./message-data-type";
 
 export interface LoginRes extends ServerRes {
   type: ResType.login;
@@ -43,14 +44,28 @@ export interface ExternalLogoutRes extends ServerRes {
 export interface InactiveUserListRes extends ServerRes {
   type: ResType.inactiveUserList;
   payload: {
-    users: {login: string, isLogined: true}[];
+    users: { login: string; isLogined: true }[];
   };
 }
 
 export interface ActiveUserListRes extends ServerRes {
   type: ResType.activeUserList;
   payload: {
-    users: {login: string, isLogined: false}[];
+    users: { login: string; isLogined: false }[];
+  };
+}
+
+export interface MessageRes extends ServerRes {
+  type: ResType.message;
+  payload: {
+    message: MessageData;
+  };
+}
+
+export interface MessageHistoryRes extends ServerRes {
+  type: ResType.messageHistory;
+  payload: {
+    messages: MessageData[];
   };
 }
 
@@ -60,5 +75,6 @@ export type SomeServerResponse =
   | ExternalLoginRes
   | ExternalLogoutRes
   | InactiveUserListRes
-  | ActiveUserListRes;
-
+  | ActiveUserListRes
+  | MessageRes
+  | MessageHistoryRes;

@@ -67,4 +67,17 @@ export class Sender {
     this.getSocket().send(JSON.stringify(request1));
     this.getSocket().send(JSON.stringify(request2));
   }
+
+  public getMessageHistory(login: string): void {
+    const request = {
+      id: "",
+      type: "MSG_FROM_USER",
+      payload: {
+        user: {
+          login: login,
+        },
+      },
+    };
+    this.getSocket().send(JSON.stringify(request));
+  }
 }

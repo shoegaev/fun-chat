@@ -7,6 +7,7 @@ import { Router } from "../../../../router/router";
 import { Connection } from "../../../../connection/connection";
 import { MessageHistoryView } from "./message-history-view/message-history-view";
 import { MessageInputFieldView } from "./message-input-panel-view/message-input-panel-view";
+import "./messenger-interface-style.scss";
 
 export class MessengerInterfaceView extends View {
   private router: Router;
@@ -36,13 +37,16 @@ export class MessengerInterfaceView extends View {
   public openMessageHistory(login: string): void {
     this.messageHistoryArr[0]?.removeView();
     const messageHistoryView = new MessageHistoryView(
-      ["messenger-interface__message_history"],
+      ["messenger-interface__message-history"],
       login,
       this.connection,
+      this.router,
     );
     this.messageHistoryContainer.append(messageHistoryView.getHtmlElement());
     this.removeUserNotSelectedClass();
     this.messageHistoryArr[0] = messageHistoryView;
+
+    this.connection.sender.getMessageHistory(login);
   }
 
   public closeMessageHistory(): void {
@@ -54,6 +58,10 @@ export class MessengerInterfaceView extends View {
     this.getHtmlElement().classList.remove(
       "messenger-interface_user-not-selected",
     );
+  }
+
+  public getCurrentMessageHistoriView(): MessageHistoryView | null {
+    return this.messageHistoryArr[0];
   }
 
   private addUserNotSelectedClass(): void {

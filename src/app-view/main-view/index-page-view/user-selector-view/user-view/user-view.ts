@@ -56,6 +56,7 @@ export class UserView extends View {
 
   public removeSelectedStatus(): void {
     this.getHtmlElement().classList.remove("user_selected");
+    this.params.users.selectedUser = null;
   }
 
   public setOnlineStatus(): void {
