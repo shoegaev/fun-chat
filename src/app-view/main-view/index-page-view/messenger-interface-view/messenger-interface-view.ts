@@ -6,7 +6,7 @@ import {
 import { Router } from "../../../../router/router";
 import { Connection } from "../../../../connection/connection";
 import { MessageHistoryView } from "./message-history-view/message-history-view";
-import { MessageInputFieldView } from "./message-input-panel-view/message-input-panel-view";
+import { MessageInputFieldView } from "./message-input-panel-view/message-input-field-view";
 import "./messenger-interface-style.scss";
 
 export class MessengerInterfaceView extends View {
@@ -17,6 +17,8 @@ export class MessengerInterfaceView extends View {
   private readonly messageHistoryArr: [MessageHistoryView | null];
 
   private messageHistoryContainer: HTMLElement;
+
+  public readonly messageInputField: MessageInputFieldView;
 
   constructor(cssClasses: string[], router: Router, connection: Connection) {
     const MESSENGER_INTERFACE_PARAMS: ElementParametrs = {
@@ -31,7 +33,8 @@ export class MessengerInterfaceView extends View {
     this.router = router;
     this.connection = connection;
     this.messageHistoryArr = [null];
-    [this.messageHistoryContainer] = this.configureView();
+    [this.messageHistoryContainer, this.messageInputField] =
+      this.configureView();
   }
 
   public openMessageHistory(login: string): void {
@@ -70,7 +73,7 @@ export class MessengerInterfaceView extends View {
     );
   }
 
-  private configureView(): HTMLElement[] {
+  private configureView(): [HTMLElement, MessageInputFieldView] {
     const messageHistoryContainer = new ElementCreator({
       tag: "div",
       cssClasses: ["messenger-interface__history-container"],
@@ -90,6 +93,6 @@ export class MessengerInterfaceView extends View {
       messageHistoryContainer,
       messageInputField.getHtmlElement(),
     );
-    return [messageHistoryContainer.getElement()];
+    return [messageHistoryContainer.getElement(), messageInputField];
   }
 }

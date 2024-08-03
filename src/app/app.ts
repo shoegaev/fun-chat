@@ -134,12 +134,15 @@ export class App {
           if (userView) {
             messengerInterfaceView.openMessageHistory(resource);
             userView.setSelectedStatus();
+            messengerInterfaceView.messageInputField.activateField();
+            messengerInterfaceView.messageInputField.clearTextArea();
           } else {
             this.router.navigate({ page: Pages.login });
           }
         } else {
           userListView.users.selectedUser?.removeSelectedStatus();
           messengerInterfaceView.closeMessageHistory();
+          messengerInterfaceView.messageInputField.disableField();
           return;
         }
       },

@@ -153,18 +153,28 @@ export class ServerCallbacksCreator {
         .getCurrentMessageHistoriView()
         ?.addMessage(data);
     };
+    const isMessageHistoryOpen = (data: MessageData): boolean => {
+      const currentOpenedLogin =
+        this.indexPageView.messengerInterfaceView.getCurrentMessageHistoriView()
+          ?.login;
+      return data.to === currentOpenedLogin || data.from === currentOpenedLogin;
+    };
     this.serverCallbacks.push(
       {
         type: ResType.message,
         callback: (messageData) => {
-          addMessageToList(messageData);
+          if (isMessageHistoryOpen(messageData)) {
+            addMessageToList(messageData);
+          }
         },
       },
       {
         type: ResType.messageHistory,
         callback: (messageDataArr): void => {
           messageDataArr.forEach((messageData) => {
-            addMessageToList(messageData);
+            if (isMessageHistoryOpen(messageData)) {
+              addMessageToList(messageData);
+            }
           });
         },
       },

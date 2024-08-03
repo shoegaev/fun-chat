@@ -12,6 +12,8 @@ import "./message-history-style.scss";
 export class MessageHistoryView extends View {
   private connection: Connection;
 
+  public readonly login: string;
+
   private readonly closeButton: HTMLElement;
 
   private readonly list: HTMLElement;
@@ -30,14 +32,15 @@ export class MessageHistoryView extends View {
     };
     super(MESSAGE_HISTORY_PARAMS);
     this.connection = connection;
+    this.login = login;
     this.messages = [];
-    [this.closeButton, this.list] = this.configureView(login);
+    [this.closeButton, this.list] = this.configureView();
     this.closeButton.addEventListener("click", () => {
       router.navigate({ page: Pages.index });
     });
   }
 
-  private configureView(login: string): HTMLElement[] {
+  private configureView(): HTMLElement[] {
     const header = new ElementCreator({
       tag: "div",
       cssClasses: ["message-history__header"],
@@ -45,7 +48,7 @@ export class MessageHistoryView extends View {
     const userLogin = new ElementCreator({
       tag: "span",
       cssClasses: ["message-history__user-login"],
-      textContent: login,
+      textContent: this.login,
     });
     const closeButton = new ElementCreator({
       tag: "div",

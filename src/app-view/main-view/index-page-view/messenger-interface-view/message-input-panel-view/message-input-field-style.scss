@@ -1,0 +1,50 @@
+@import "../../../../../variables.scss";
+
+.message-input-field {
+  padding: 5px;
+  display: flex;
+  gap: 5px;
+  transition: opacity 0.2s ease;
+  .message-input-field__edit-mode-section {
+    width: 100%;
+  }
+  .edit-mode-section {
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    height: 0px;
+    .edit-mode-section__cancel-button {
+      width: 15px;
+      height: 15px;
+      background-color: red;
+      cursor: pointer;
+    }
+  }
+
+  .message-input-field__textArea {
+    width: 80%;
+    height: auto;
+    padding: 3px;
+    border: $border-interfaceBorder;
+    min-height: 20px;
+    overflow-y: scroll;
+  }
+  .message-input-field__textArea:empty::before {
+    content: "message";
+  }
+  .message-input-field__button {
+    width: 40px;
+    height: 40px;
+    border: $border-interfaceBorder;
+    cursor: pointer;
+    .message-input-field__button-icon {
+      width: 20px;
+      height: 20px;
+      border: $border-interfaceBorder;
+    }
+  }
+}
+
+.message-input-field_disabled {
+  opacity: 0.3;
+}

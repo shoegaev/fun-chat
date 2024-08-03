@@ -80,4 +80,18 @@ export class Sender {
     };
     this.getSocket().send(JSON.stringify(request));
   }
+
+  public sendMessage(login: string, text: string): void {
+    const request = {
+      id: "",
+      type: "MSG_SEND",
+      payload: {
+        message: {
+          to: login,
+          text: text,
+        },
+      },
+    };
+    this.getSocket().send(JSON.stringify(request));
+  }
 }

@@ -11,9 +11,9 @@
 
 .messenger-interface__history-container {
   width: 100%;
-  height: 80%;
+  min-height: 60%;
+  flex-grow: 1;
   border: $border-interfaceBorder;
-  background-color: $color-interfaceBackgroundHovered;
   border-radius: $interfaceBorderRadius;
   position: relative;
 }
@@ -37,9 +37,9 @@
 }
 
 .messenger-interface__message-input-field {
-  height: 20%;
+  max-height: 40%;
+  min-height: 15%;
   width: 100%;
-  background-color: $color-interfaceBackgroundHovered;
   border: $border-interfaceBorder;
   border-radius: $interfaceBorderRadius;
 }
