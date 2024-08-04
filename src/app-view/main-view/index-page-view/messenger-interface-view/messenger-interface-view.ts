@@ -48,7 +48,6 @@ export class MessengerInterfaceView extends View {
     this.messageHistoryContainer.append(messageHistoryView.getHtmlElement());
     this.removeUserNotSelectedClass();
     this.messageHistoryArr[0] = messageHistoryView;
-
     this.connection.sender.getMessageHistory(login);
   }
 

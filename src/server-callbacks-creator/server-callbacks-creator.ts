@@ -10,6 +10,8 @@ import { Connection } from "../connection/connection";
 import { LoadingWindowView } from "../loading-window-view/loading-window-view";
 import { ResType } from "../connection/types/global-response-types";
 import { MessageData } from "../connection/types/message-data-type";
+import { MessageStatus } from "../app-view/main-view/index-page-view/messenger-interface-view/message-history-view/message-view/message-view";
+import { MessageHistoryView } from "../app-view/main-view/index-page-view/messenger-interface-view/message-history-view/message-history-view";
 
 export class ServerCallbacksCreator {
   private serverCallbacks: SomeServerCallback[];
@@ -50,6 +52,17 @@ export class ServerCallbacksCreator {
     this.createExtendedUserAutheticationCallbacks();
     this.createGettingUserListCallback();
     this.createMessageCallbacks();
+    this.createMessageStatusCallback();
+  }
+
+  private getCurrentMessageHistoriView(): MessageHistoryView | null {
+    return this.indexPageView.messengerInterfaceView.getCurrentMessageHistoriView();
+  }
+
+  private setMessageStatus(messageId: string, status: MessageStatus): void {
+    const messageHistory = this.getCurrentMessageHistoriView();
+    const message = messageHistory?.findMessage(messageId);
+    message?.view.setStatus(status);
   }
 
   private createAuthenticationCallbacks(): void {
@@ -130,6 +143,7 @@ export class ServerCallbacksCreator {
           return;
         }
         const userView = userListView.addUser(user.login);
+        this.connection.sender.getMessageHistory(user.login);
         if (user.isLogined) {
           userView.setOnlineStatus();
         }
@@ -148,16 +162,18 @@ export class ServerCallbacksCreator {
   }
 
   private createMessageCallbacks(): void {
+    const messengerInterfaceView = this.indexPageView.messengerInterfaceView;
     const addMessageToList = (data: MessageData): void => {
-      this.indexPageView.messengerInterfaceView
-        .getCurrentMessageHistoriView()
-        ?.addMessage(data);
+      messengerInterfaceView.getCurrentMessageHistoriView()?.addMessage(data);
     };
     const isMessageHistoryOpen = (data: MessageData): boolean => {
-      const currentOpenedLogin =
-        this.indexPageView.messengerInterfaceView.getCurrentMessageHistoriView()
-          ?.login;
+      const currentOpenedLogin = this.getCurrentMessageHistoriView()?.login;
       return data.to === currentOpenedLogin || data.from === currentOpenedLogin;
+    };
+    const addNewMessagesLine = (): void => {
+      messengerInterfaceView
+        .getCurrentMessageHistoriView()
+        ?.addNewMessagesLine();
     };
     this.serverCallbacks.push(
       {
@@ -165,17 +181,36 @@ export class ServerCallbacksCreator {
         callback: (messageData) => {
           if (isMessageHistoryOpen(messageData)) {
             addMessageToList(messageData);
+            addNewMessagesLine();
           }
         },
       },
       {
         type: ResType.messageHistory,
         callback: (messageDataArr): void => {
-          messageDataArr.forEach((messageData) => {
-            if (isMessageHistoryOpen(messageData)) {
+          if (messageDataArr[0] && isMessageHistoryOpen(messageDataArr[0])) {
+            messageDataArr.forEach((messageData) => {
               addMessageToList(messageData);
-            }
-          });
+            });
+          }
+          addNewMessagesLine();
+        },
+      },
+    );
+  }
+
+  private createMessageStatusCallback(): void {
+    this.serverCallbacks.push(
+      {
+        type: ResType.messageRead,
+        callback: (messageId: string) => {
+          this.setMessageStatus(messageId, MessageStatus.readed);
+        },
+      },
+      {
+        type: ResType.messageDeliver,
+        callback: (messageId: string) => {
+          this.setMessageStatus(messageId, MessageStatus.delivered);
         },
       },
     );

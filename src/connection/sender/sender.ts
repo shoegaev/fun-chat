@@ -94,4 +94,17 @@ export class Sender {
     };
     this.getSocket().send(JSON.stringify(request));
   }
+
+  public changeReadStatus(messageId: string): void {
+    const request = {
+      id: "",
+      type: "MSG_READ",
+      payload: {
+        message: {
+          id: messageId,
+        },
+      },
+    };
+    this.getSocket().send(JSON.stringify(request));
+  }
 }

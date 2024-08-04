@@ -24,7 +24,7 @@ export interface MessageParams {
 export class MessageView extends View {
   private readonly connection: Connection;
 
-  private readonly params: MessageParams;
+  public readonly params: MessageParams;
 
   private readonly status: HTMLElement;
 

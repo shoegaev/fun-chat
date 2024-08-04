@@ -8,6 +8,8 @@ export enum ResType {
   inactiveUserList = "USER_INACTIVE",
   message = "MSG_SEND",
   messageHistory = "MSG_FROM_USER",
+  messageRead = "MSG_READ",
+  messageDeliver = "MSG_DELIVER",
 }
 
 export interface ServerRes {

@@ -52,10 +52,22 @@ export interface MessageHistoryCallback extends ServerCallback {
   type: ResType.messageHistory;
   callback: (arr: MessageData[]) => void;
 }
+// message status change
+export interface MessageReadCallback extends ServerCallback {
+  type: ResType.messageRead;
+  callback: (messageId: string) => void;
+}
+
+export interface MessageDeliverCallback extends ServerCallback {
+  type: ResType.messageDeliver;
+  callback: (messageId: string) => void;
+}
 
 export type SomeServerCallback =
   | ServerExternalUserCallback
   | UserAuthenticationCallback
   | UserListCallback
   | MessageCallback
-  | MessageHistoryCallback;
+  | MessageHistoryCallback
+  | MessageReadCallback
+  | MessageDeliverCallback;

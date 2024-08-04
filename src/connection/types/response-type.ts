@@ -69,6 +69,24 @@ export interface MessageHistoryRes extends ServerRes {
   };
 }
 
+export interface MessageReadRes extends ServerRes {
+  type: ResType.messageRead;
+  payload: {
+    message: {
+      id: string;
+    };
+  };
+}
+
+export interface MessageDeliverRes extends ServerRes {
+  type: ResType.messageDeliver;
+  payload: {
+    message: {
+      id: string;
+    };
+  };
+}
+
 export type SomeServerResponse =
   | LoginRes
   | LogoutRes
@@ -77,4 +95,6 @@ export type SomeServerResponse =
   | InactiveUserListRes
   | ActiveUserListRes
   | MessageRes
-  | MessageHistoryRes;
+  | MessageHistoryRes
+  | MessageReadRes
+  | MessageDeliverRes;

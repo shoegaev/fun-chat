@@ -22,9 +22,15 @@
       }
     }
   }
-  @media (hover: hover){
+  @media (hover: hover) {
     .message__edit-button:hover {
       background-color: green;
     }
+  }
+}
+.message.message_incoming {
+  .message__status {
+    opacity: 0;
+    user-select: none;
   }
 }

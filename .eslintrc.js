@@ -17,7 +17,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "error",
     "no-plusplus": "off",
     "no-console": "warn",
-    "max-len": ["warn", { code: 120 }],
+    "max-len": ["warn", { code: 120, ignorePattern: "^import .*" }],
     indent: [
       "warn",
       2,
