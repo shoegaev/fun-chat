@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5px;
+  // padding: 5px 5px 0 5px;
 }
 .message-history__header {
   width: 100%;
@@ -11,6 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 5px 5px 0 5px;
 }
 .message-history__close-button {
   width: 20px;
@@ -19,14 +20,33 @@
   cursor: pointer;
 }
 .message-history__list {
-  width: 100%;
+  width: calc(100% - 5px);
   height: 90%;
-  // border: $border-interfaceBorder;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 5px;
+  align-self: flex-start;
+  .message-history__new-messages-line {
+    border-bottom: $border-interfaceBorder;
+    text-align: center;
+    font-size: 0.8em;
+    opacity: 0.7;
+  }
+}
+.message-history__list::-webkit-scrollbar {
+  width: 5px;
+}
+.message-history__list::-webkit-scrollbar {
+  background-color: $color-interfaceBackgroundHovered;
+  border-radius: $interfaceBorderRadius;
+}
+.message-history__list::-webkit-scrollbar-thumb {
+  background-color: $color-interfaceBorder;
+  width: 10px;
+  height: 20px;
+  border-radius: $interfaceBorderRadius;
 }
 .message-history__message {
   width: 100%;

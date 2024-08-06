@@ -1,10 +1,10 @@
 @import "../../../../../variables.scss";
 
 .message-input-field {
-  padding: 5px;
   display: flex;
   gap: 5px;
   transition: opacity 0.2s ease;
+  position: relative;
   .message-input-field__edit-mode-section {
     width: 100%;
   }
@@ -22,12 +22,14 @@
   }
 
   .message-input-field__textArea {
-    width: 80%;
+    width: 100%;
     height: auto;
-    padding: 3px;
+    padding: 10px 45px 10px 5px;
     border: $border-interfaceBorder;
+    border-radius: $interfaceBorderRadius;
     min-height: 20px;
     overflow-y: scroll;
+    scrollbar-width: none;
   }
   .message-input-field__textArea:empty::before {
     content: "message";
@@ -35,16 +37,26 @@
   .message-input-field__button {
     width: 40px;
     height: 40px;
-    border: $border-interfaceBorder;
+    border-radius: $interfaceBorderRadius;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     .message-input-field__button-icon {
-      width: 20px;
-      height: 20px;
-      border: $border-interfaceBorder;
+      width: 100%;
+      height: 100%;
     }
+  }
+}
+@media (hover: hover){
+  .message-input-field__button:hover {
+    background-color: $color-interfaceBackgroundHovered;
   }
 }
 
 .message-input-field_disabled {
-  opacity: 0.3;
+  display: none;
 }

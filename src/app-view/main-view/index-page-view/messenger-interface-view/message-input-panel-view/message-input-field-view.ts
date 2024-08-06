@@ -5,6 +5,7 @@ import {
 } from "../../../../../util/element-creator";
 import { Connection } from "../../../../../connection/connection";
 import { MessageHistoryView } from "../message-history-view/message-history-view";
+import sendIcon from "./send-icon.svg";
 import "./message-input-field-style.scss";
 
 export class MessageInputFieldView extends View {
@@ -71,21 +72,22 @@ export class MessageInputFieldView extends View {
       cssClasses: ["message-input-field__button"],
     });
     const buttonIcon = new ElementCreator({
-      tag: "div",
+      tag: "img",
       cssClasses: ["message-input-field__button-icon"],
+      atributes: [
+        {
+          name: "src",
+          value: sendIcon,
+        },
+      ],
     });
-    const buttonText = new ElementCreator({
-      tag: "span",
-      cssClasses: ["message-input-field__button-text"],
-      textContent: "send",
-    });
-    button.apendInnerElements(buttonIcon, buttonText);
+    button.apendInnerElements(buttonIcon);
     this.viewCreator.apendInnerElements(textArea, button);
     return [textArea.getElement(), button.getElement()];
   }
 
   private sendMessage(): void {
-    if (this.messageHistoryArr[0] && this.textArea.textContent) {
+    if (this.messageHistoryArr[0] && this.textArea.textContent?.trim()) {
       this.connection.sender.sendMessage(
         this.messageHistoryArr[0]?.login,
         this.textArea.textContent,

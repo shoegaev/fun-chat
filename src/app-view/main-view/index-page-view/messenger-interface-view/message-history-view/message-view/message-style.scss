@@ -1,36 +1,86 @@
 @import "../../../../../../variables.scss";
 
 .message {
-  display: grid;
-  grid-template-columns: 50px calc(100% - 50px);
+  display: flex;
   gap: 3px;
   position: relative;
   margin-top: 20px;
-  .message__header {
-    position: absolute;
-    top: -13px;
-    display: flex;
-    gap: 3px;
-    font-size: 0.8em;
-    opacity: 0.7;
-    height: 13px;
-    .message__edit-button {
-      height: 100%;
-      cursor: pointer;
-      .message__edit-button-icon {
-        height: 90%;
+
+  .message__user-name {
+    width: 50px;
+  }
+  .message__message-container {
+    min-width: 150px;
+    max-width: calc(100% - 50px);
+    position: relative;
+    .message__header {
+      padding: 0 5px;
+      position: absolute;
+      top: -20px;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8em;
+      opacity: 0.7;
+      height: 15px;
+      width: 100%;
+      .message__buttons-container {
+        display: flex;
+        gap: 5px;
+        .message__edit-button,
+        .message__delete-button {
+          height: 20px;
+          width: 20px;
+          border-radius: $interfaceBorderRadius;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 2px;
+          cursor: pointer;
+          img {
+            height: 80%;
+            width: 80%;
+          }
+        }
+      }
+    }
+    .message__text {
+      padding: 4px 4px 20px 4px;
+      border-radius: $interfaceBorderRadius;
+      background-color: rgba($color-background, 0.7);
+      word-break: break-word;
+    }
+    .message__message-footer {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      padding: 0 5px 5px 5px;
+      font-size: 0.8em;
+      opacity: 0.7;
+      display: flex;
+      justify-content: space-between;
+      .message__edited-status {
+        opacity: 0;
+        visibility: hidden;
       }
     }
   }
   @media (hover: hover) {
-    .message__edit-button:hover {
-      background-color: green;
+    .message__edit-button:hover,
+    .message__delete-button:hover {
+      background-color: $color-interfaceBackgroundHovered;
     }
   }
 }
 .message.message_incoming {
   .message__status {
     opacity: 0;
-    user-select: none;
+    visibility: hidden;
+  }
+  .message__text {
+    background-color: $color-interfaceBackgroundHovered;
   }
 }
