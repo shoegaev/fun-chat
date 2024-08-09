@@ -55,7 +55,7 @@ export interface MessageHistoryCallback extends ServerCallback {
 // message status change
 export interface MessageReadCallback extends ServerCallback {
   type: ResType.messageRead;
-  callback: (messageId: string) => void;
+  callback: (messageId: string, login?: string) => void;
 }
 
 export interface MessageDeliverCallback extends ServerCallback {

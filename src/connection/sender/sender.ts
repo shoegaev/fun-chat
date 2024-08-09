@@ -95,9 +95,9 @@ export class Sender {
     this.getSocket().send(JSON.stringify(request));
   }
 
-  public changeReadStatus(messageId: string): void {
+  public changeReadStatus(login: string, messageId: string): void {
     const request = {
-      id: "",
+      id: login,
       type: "MSG_READ",
       payload: {
         message: {

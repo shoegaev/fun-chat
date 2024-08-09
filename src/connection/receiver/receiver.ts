@@ -85,7 +85,7 @@ export class Receiver {
       data.type === ResType.messageRead ||
       data.type === ResType.messageDeliver
     ) {
-      (callback as MessageReadCallback).callback(data.payload.message.id);
+      (callback as MessageReadCallback).callback(data.payload.message.id, data.id);
     } else {
       (callback as UserAuthenticationCallback).callback();
     }

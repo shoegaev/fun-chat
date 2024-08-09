@@ -1,5 +1,6 @@
 import { AppView } from "../app-view/app-view";
 import { IndexPageView } from "../app-view/main-view/index-page-view/index-page-view";
+import { UserListView } from "../app-view/main-view/index-page-view/user-selector-view/user-list-view/user-list-view";
 import { Router, Pages } from "../router/router";
 import {
   ServerErrCallback,
@@ -14,19 +15,21 @@ import { MessageStatus } from "../app-view/main-view/index-page-view/messenger-i
 import { MessageHistoryView } from "../app-view/main-view/index-page-view/messenger-interface-view/message-history-view/message-history-view";
 
 export class ServerCallbacksCreator {
-  private serverCallbacks: SomeServerCallback[];
+  private readonly serverCallbacks: SomeServerCallback[];
 
-  private serverErrCallbacks: ServerErrCallback[];
+  private readonly serverErrCallbacks: ServerErrCallback[];
 
-  private appView: AppView;
+  private readonly appView: AppView;
 
-  private loadingWindowView: LoadingWindowView;
+  private readonly loadingWindowView: LoadingWindowView;
 
-  private indexPageView: IndexPageView;
+  private readonly indexPageView: IndexPageView;
 
-  private router: Router;
+  private readonly userListView: UserListView;
 
-  private connection: Connection;
+  private readonly router: Router;
+
+  private readonly connection: Connection;
 
   constructor(
     serverCallbacks: SomeServerCallback[],
@@ -39,6 +42,8 @@ export class ServerCallbacksCreator {
     this.serverCallbacks = serverCallbacks;
     this.serverErrCallbacks = serverErrCallbacks;
     this.appView = appView;
+    this.userListView =
+      this.appView.mainView.indexPageView.userSelectorView.userListView;
     this.loadingWindowView = loadingWindowView;
     this.indexPageView = appView.mainView.indexPageView;
     this.router = router;
@@ -57,12 +62,6 @@ export class ServerCallbacksCreator {
 
   private getCurrentMessageHistoriView(): MessageHistoryView | null {
     return this.indexPageView.messengerInterfaceView.getCurrentMessageHistoriView();
-  }
-
-  private setMessageStatus(messageId: string, status: MessageStatus): void {
-    const messageHistory = this.getCurrentMessageHistoriView();
-    const message = messageHistory?.findMessage(messageId);
-    message?.view.setStatus(status);
   }
 
   private createAuthenticationCallbacks(): void {
@@ -161,6 +160,7 @@ export class ServerCallbacksCreator {
     );
   }
 
+  // eslint-disable-next-line max-lines-per-function
   private createMessageCallbacks(): void {
     const messengerInterfaceView = this.indexPageView.messengerInterfaceView;
     const addMessageToList = (data: MessageData): void => {
@@ -183,6 +183,9 @@ export class ServerCallbacksCreator {
             addMessageToList(messageData);
             addNewMessagesLine();
           }
+          if (messageData.to === this.connection.authorizedUser[0]?.login) {
+            this.userListView.findUser(messageData.from)?.addUnreadMessage();
+          }
         },
       },
       {
@@ -192,19 +195,51 @@ export class ServerCallbacksCreator {
             messageDataArr.forEach((messageData) => {
               addMessageToList(messageData);
             });
+            addNewMessagesLine();
+          } else {
+            let unreadMessages = 0;
+            let userLogin;
+            for (let i = messageDataArr.length - 1; i >= 0; i -= 1) {
+              if (
+                messageDataArr[i].from ===
+                  this.connection.authorizedUser[0]?.login ||
+                messageDataArr[i].status.isReaded
+              ) {
+                break;
+              }
+              if (!userLogin) {
+                userLogin = messageDataArr[i].from;
+              }
+              unreadMessages += 1;
+            }
+            if (unreadMessages && userLogin) {
+              this.userListView
+                .findUser(userLogin)
+                ?.addUnreadMessage(unreadMessages);
+            }
           }
-          addNewMessagesLine();
         },
       },
     );
+  }
+
+  private setMessageStatus(messageId: string, status: MessageStatus): void {
+    const messageHistory = this.getCurrentMessageHistoriView();
+    const message = messageHistory?.findMessage(messageId);
+    message?.view.setStatus(status);
   }
 
   private createMessageStatusCallback(): void {
     this.serverCallbacks.push(
       {
         type: ResType.messageRead,
-        callback: (messageId: string) => {
+        callback: (messageId: string, login?: string) => {
           this.setMessageStatus(messageId, MessageStatus.readed);
+          if (login) {
+            
+            this.userListView.findUser(login)?.removeUnreadMessages();
+            console.log(login);
+          }
         },
       },
       {

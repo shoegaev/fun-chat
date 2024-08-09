@@ -4,6 +4,7 @@ import {
   ElementCreator,
 } from "../../../../../util/element-creator";
 import "./user-style.scss";
+import envelopeIcon from "./envelope_icon.svg";
 
 export type Users = {
   selectedUser: null | UserView;
@@ -24,7 +25,7 @@ export class UserView extends View {
 
   private status: HTMLElement;
 
-  private unreadMessages: HTMLElement;
+  private unreadMessagesNumberElement: HTMLElement;
 
   private unreadMessagesNumber: number;
 
@@ -36,7 +37,9 @@ export class UserView extends View {
     super(USER_VIEW_PARAMS);
     this.params = params;
     this.unreadMessagesNumber = 0;
-    [this.status, this.unreadMessages] = this.connfigureView(params.login);
+    [this.status, this.unreadMessagesNumberElement] = this.connfigureView(
+      params.login,
+    );
     this.getHtmlElement().addEventListener("click", () => {
       if (!(this.params.users.selectedUser === this)) {
         params.callback();
@@ -70,14 +73,34 @@ export class UserView extends View {
     onlineUserArr.splice(onlineUserArr.indexOf(this), 1);
   }
 
-  public addUnreadMessage(): void {
-    this.unreadMessagesNumber += 1;
-    this.unreadMessages.textContent = `(${this.unreadMessagesNumber})`;
+  public addUnreadMessage(quantity?: number): void {
+    if (this.unreadMessagesNumber === 0) {
+      this.getHtmlElement().classList.add("user_unread-messages");
+    }
+    if (quantity) {
+      this.unreadMessagesNumber = quantity;
+    } else {
+      this.unreadMessagesNumber += 1;
+    }
+    if (this.unreadMessagesNumber < 100){
+      this.unreadMessagesNumberElement.textContent = `(${this.unreadMessagesNumber})`;
+    } else {
+      this.unreadMessagesNumberElement.textContent = "(99+)";
+    }
   }
 
   public removeUnreadMessages(): void {
-    this.unreadMessages.textContent = "";
-    this.unreadMessagesNumber = 0;
+    if (this.unreadMessagesNumber !== 0) {
+      this.unreadMessagesNumber = this.unreadMessagesNumber - 1;
+    }
+    if (this.unreadMessagesNumber === 0) {
+      this.getHtmlElement().classList.remove("user_unread-messages");
+    }
+    if (this.unreadMessagesNumber < 100){
+      this.unreadMessagesNumberElement.textContent = `(${this.unreadMessagesNumber})`;
+    } else {
+      this.unreadMessagesNumberElement.textContent = "(99+)";
+    }
   }
 
   private connfigureView(login: string): HTMLElement[] {
@@ -90,16 +113,29 @@ export class UserView extends View {
       cssClasses: ["user__login"],
       textContent: login,
     });
-    const unreadMessages = new ElementCreator({
-      tag: "span",
-      cssClasses: ["user__unread-messages"],
-      textContent: "unread-messages",
+    const unreadMessageStatus = new ElementCreator({
+      tag: "div",
+      cssClasses: ["user__unread-messages-container"],
     });
+    const unreadMessageText = new ElementCreator({
+      tag: "span",
+      cssClasses: ["user__unread-messages-text"],
+      textContent: "",
+    });
+    const unreadMessageIcon = new ElementCreator({
+      tag: "img",
+      cssClasses: ["user__unread-messages-icon"],
+      atributes: [{ name: "src", value: envelopeIcon }],
+    });
+    unreadMessageStatus.apendInnerElements(
+      unreadMessageText,
+      unreadMessageIcon,
+    );
     this.getHtmlElement().append(
       status.getElement(),
       loginText.getElement(),
-      unreadMessages.getElement(),
+      unreadMessageStatus.getElement(),
     );
-    return [status.getElement(), unreadMessages.getElement()];
+    return [status.getElement(), unreadMessageText.getElement()];
   }
 }

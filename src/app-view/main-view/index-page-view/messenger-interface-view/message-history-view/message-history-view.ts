@@ -105,7 +105,10 @@ export class MessageHistoryView extends View {
       if (message.data.status.isReaded || !message.view.params.incoming) {
         return;
       }
-      this.connection.sender.changeReadStatus(message.data.id);
+      this.connection.sender.changeReadStatus(
+        message.data.from,
+        message.data.id,
+      );
     }
   }
 
