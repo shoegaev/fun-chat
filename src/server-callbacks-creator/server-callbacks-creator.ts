@@ -182,6 +182,9 @@ export class ServerCallbacksCreator {
           if (isMessageHistoryOpen(messageData)) {
             addMessageToList(messageData);
             addNewMessagesLine();
+            if (messageData.from === this.connection.authorizedUser[0]?.login) {
+              this.getCurrentMessageHistoriView()?.onMessageSend();
+            }
           }
           if (messageData.to === this.connection.authorizedUser[0]?.login) {
             this.userListView.findUser(messageData.from)?.addUnreadMessage();
@@ -236,9 +239,7 @@ export class ServerCallbacksCreator {
         callback: (messageId: string, login?: string) => {
           this.setMessageStatus(messageId, MessageStatus.readed);
           if (login) {
-            
             this.userListView.findUser(login)?.removeUnreadMessages();
-            console.log(login);
           }
         },
       },

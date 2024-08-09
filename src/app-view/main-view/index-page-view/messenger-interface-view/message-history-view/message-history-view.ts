@@ -99,8 +99,14 @@ export class MessageHistoryView extends View {
     this.newMessagesLine = null;
   }
 
-  public changeMessagesReadedStatus(): void {
-    for (let i = this.messages.length - 1; i >= 0; i -= 1) {
+  public changeMessagesReadedStatus(onMessageSend?: boolean): void {
+    for (
+      let i = onMessageSend
+        ? this.messages.length - 2
+        : this.messages.length - 1;
+      i >= 0;
+      i -= 1
+    ) {
       const message = this.messages[i];
       if (message.data.status.isReaded || !message.view.params.incoming) {
         return;
@@ -114,6 +120,26 @@ export class MessageHistoryView extends View {
 
   public findMessage(messageId: string): Message | undefined {
     return this.messages.find((message) => message.data.id === messageId);
+  }
+
+  public srollToTheBottom(): void {
+    const newMessageLineY = this.newMessagesLine?.offsetTop;
+    const listScrollHeight = this.list.scrollHeight;
+    const listHeigth = this.list.clientHeight;
+    if (newMessageLineY && listScrollHeight - newMessageLineY >= listHeigth) {
+      this.list.scroll({ top: newMessageLineY, behavior: "smooth" });
+    } else {
+      this.list.scroll({
+        top: listScrollHeight - listHeigth,
+        behavior: "smooth",
+      });
+    }
+  }
+
+  public onMessageSend(): void {
+    this.changeMessagesReadedStatus(true);
+    this.removeNewMessagesLine();
+    this.srollToTheBottom();
   }
 
   private configureView(): HTMLElement[] {

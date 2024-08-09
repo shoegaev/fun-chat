@@ -93,8 +93,6 @@ export class MessageInputFieldView extends View {
         this.textArea.textContent,
       );
       this.clearTextArea();
-      this.messageHistoryArr[0].changeMessagesReadedStatus();
-      this.messageHistoryArr[0].removeNewMessagesLine();
     }
   }
 

@@ -28,6 +28,7 @@
   gap: 10px;
   padding: 5px;
   align-self: flex-start;
+  position: relative;
   .message-history__new-messages-line {
     border-bottom: $border-interfaceBorder;
     text-align: center;
