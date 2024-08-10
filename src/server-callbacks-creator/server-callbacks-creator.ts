@@ -188,39 +188,45 @@ export class ServerCallbacksCreator {
           }
           if (messageData.to === this.connection.authorizedUser[0]?.login) {
             this.userListView.findUser(messageData.from)?.addUnreadMessage();
+            this.getCurrentMessageHistoriView()?.addUnreadMessages();
           }
         },
       },
       {
         type: ResType.messageHistory,
         callback: (messageDataArr): void => {
+          let unreadMessages = 0;
+          let userLogin;
+          for (let i = messageDataArr.length - 1; i >= 0; i -= 1) {
+            if (
+              messageDataArr[i].from ===
+                this.connection.authorizedUser[0]?.login ||
+              messageDataArr[i].status.isReaded
+            ) {
+              break;
+            }
+            if (!userLogin) {
+              userLogin = messageDataArr[i].from;
+            }
+            unreadMessages += 1;
+          }
+          if (unreadMessages && userLogin) {
+            this.userListView
+              .findUser(userLogin)
+              ?.addUnreadMessage(unreadMessages);
+          }
           if (messageDataArr[0] && isMessageHistoryOpen(messageDataArr[0])) {
             messageDataArr.forEach((messageData) => {
               addMessageToList(messageData);
             });
             addNewMessagesLine();
-          } else {
-            let unreadMessages = 0;
-            let userLogin;
-            for (let i = messageDataArr.length - 1; i >= 0; i -= 1) {
-              if (
-                messageDataArr[i].from ===
-                  this.connection.authorizedUser[0]?.login ||
-                messageDataArr[i].status.isReaded
-              ) {
-                break;
-              }
-              if (!userLogin) {
-                userLogin = messageDataArr[i].from;
-              }
-              unreadMessages += 1;
-            }
-            if (unreadMessages && userLogin) {
-              this.userListView
-                .findUser(userLogin)
-                ?.addUnreadMessage(unreadMessages);
+            if (unreadMessages) {
+              this.getCurrentMessageHistoriView()?.addUnreadMessages(
+                unreadMessages,
+              );
             }
           }
+          this.getCurrentMessageHistoriView()?.onListScroll();
         },
       },
     );
@@ -240,6 +246,7 @@ export class ServerCallbacksCreator {
           this.setMessageStatus(messageId, MessageStatus.readed);
           if (login) {
             this.userListView.findUser(login)?.removeUnreadMessages();
+            this.getCurrentMessageHistoriView()?.removeUnreadMessages();
           }
         },
       },

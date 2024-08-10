@@ -8,6 +8,7 @@ import { Router, Pages } from "../../../../../router/router";
 import { MessageView, MessageStatus } from "./message-view/message-view";
 import { MessageData } from "../../../../../connection/types/message-data-type";
 import "./message-history-style.scss";
+import downIcon from "./down-icon.svg";
 
 type Message = { data: MessageData; view: MessageView };
 
@@ -19,6 +20,12 @@ export class MessageHistoryView extends View {
   private readonly closeButton: HTMLElement;
 
   private readonly list: HTMLElement;
+
+  private readonly scrollButton: HTMLElement;
+
+  private readonly scrollButtonText: HTMLElement;
+
+  private unreadMessages: number;
 
   private newMessagesLine: HTMLElement | null;
 
@@ -39,10 +46,17 @@ export class MessageHistoryView extends View {
     this.login = login;
     this.messages = [];
     this.newMessagesLine = null;
-    [this.closeButton, this.list] = this.configureView();
+    [this.scrollButtonText, this.scrollButton, this.closeButton, this.list] =
+      this.configureView();
+    this.unreadMessages = 0;
     this.closeButton.addEventListener("click", () => {
       router.navigate({ page: Pages.index });
     });
+    this.list.addEventListener("scroll", this.onListScroll.bind(this));
+    this.scrollButton.addEventListener(
+      "click",
+      this.srollToTheBottom.bind(this),
+    );
   }
 
   public addMessage(data: MessageData): MessageView {
@@ -142,6 +156,27 @@ export class MessageHistoryView extends View {
     this.srollToTheBottom();
   }
 
+  public addUnreadMessages(messagesNumber?: number) {
+    if (messagesNumber) {
+      this.unreadMessages = messagesNumber;
+      this.scrollButtonText.textContent = `${messagesNumber}`;
+    } else {
+      this.unreadMessages += 1;
+      this.scrollButtonText.textContent = `${this.unreadMessages}`;
+    }
+    this.scrollButton.classList.add(
+      "message-history__scroll-button_unread-message",
+    );
+  }
+
+  public removeUnreadMessages(): void {
+    this.scrollButton.classList.remove(
+      "message-history__scroll-button_unread-message",
+    );
+    this.unreadMessages = 0;
+    this.scrollButtonText.textContent = "";
+  }
+
   private configureView(): HTMLElement[] {
     const header = new ElementCreator({
       tag: "div",
@@ -161,7 +196,51 @@ export class MessageHistoryView extends View {
       tag: "div",
       cssClasses: ["message-history__list"],
     });
-    this.viewCreator.apendInnerElements(header, messageList);
-    return [closeButton.getElement(), messageList.getElement()];
+    const scrollButton = new ElementCreator({
+      tag: "div",
+      cssClasses: ["message-history__scroll-button"],
+    });
+    const scrollButtonText = new ElementCreator({
+      tag: "span",
+      cssClasses: ["message-history__scroll-button-text"],
+    });
+    const scrollButtonIcon = new ElementCreator({
+      tag: "img",
+      cssClasses: ["message-history__scroll-button-icon"],
+      atributes: [{ name: "src", value: downIcon }],
+    });
+    scrollButton.apendInnerElements(scrollButtonText, scrollButtonIcon);
+    this.viewCreator.apendInnerElements(scrollButton, header, messageList);
+    return [
+      scrollButtonText.getElement(),
+      scrollButton.getElement(),
+      closeButton.getElement(),
+      messageList.getElement(),
+    ];
+  }
+
+  public onListScroll(): void {
+    if (this.newMessagesLine) {
+      if (
+        this.list.scrollHeight -
+          (this.list.scrollTop + this.list.clientHeight) >=
+        this.list.scrollHeight -
+          this.newMessagesLine.offsetTop +
+          this.list.clientHeight
+      ) {
+        this.scrollButton.classList.remove("hidden");
+      } else {
+        this.scrollButton.classList.add("hidden");
+      }
+      return;
+    }
+    if (
+      this.list.scrollHeight - (this.list.scrollTop + this.list.clientHeight) >=
+      this.list.clientHeight
+    ) {
+      this.scrollButton.classList.remove("hidden");
+    } else {
+      this.scrollButton.classList.add("hidden");
+    }
   }
 }
