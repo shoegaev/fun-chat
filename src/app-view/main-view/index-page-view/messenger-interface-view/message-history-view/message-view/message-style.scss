@@ -31,6 +31,8 @@
         gap: 5px;
         .message__edit-button,
         .message__delete-button {
+          opacity: 0;
+          visibility: hidden;
           height: 20px;
           width: 20px;
           border-radius: $interfaceBorderRadius;
@@ -82,5 +84,15 @@
   }
   .message__text {
     background-color: $color-interfaceBackgroundHovered;
+  }
+}
+@media (hover: hover) {
+  .message:not(.message.message_incoming):hover {
+    .message__status,
+    .message__edit-button,
+    .message__delete-button {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 }

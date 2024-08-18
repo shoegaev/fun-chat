@@ -83,9 +83,13 @@ export class Receiver {
       (callback as MessageHistoryCallback).callback(data.payload.messages);
     } else if (
       data.type === ResType.messageRead ||
-      data.type === ResType.messageDeliver
+      data.type === ResType.messageDeliver ||
+      data.type === ResType.messageDelete
     ) {
-      (callback as MessageReadCallback).callback(data.payload.message.id, data.id);
+      (callback as MessageReadCallback).callback(
+        data.payload.message.id,
+        data.id,
+      );
     } else {
       (callback as UserAuthenticationCallback).callback();
     }

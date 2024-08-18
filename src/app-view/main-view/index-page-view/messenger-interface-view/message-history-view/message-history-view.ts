@@ -77,6 +77,7 @@ export class MessageHistoryView extends View {
         status: status,
         edited: data.status.isEdited,
         text: data.text,
+        id: data.id,
       },
     );
     this.messages.push({ data: data, view: message });
@@ -92,13 +93,13 @@ export class MessageHistoryView extends View {
     });
     for (let i = this.messages.length - 1; i >= 0; i -= 1) {
       if (
-        this.messages[i].data.status.isReaded ||
+        this.messages[i].view.params.status === MessageStatus.readed ||
         !this.messages[i].view.params.incoming
       ) {
+        this.removeNewMessagesLine();
         if (i === this.messages.length - 1) {
           return;
         }
-        this.removeNewMessagesLine();
         this.messages[i].view
           .getHtmlElement()
           .after(newMessagesLine.getElement());
@@ -169,12 +170,30 @@ export class MessageHistoryView extends View {
     );
   }
 
-  public removeUnreadMessages(): void {
-    this.scrollButton.classList.remove(
-      "message-history__scroll-button_unread-message",
-    );
-    this.unreadMessages = 0;
-    this.scrollButtonText.textContent = "";
+  public removeUnreadMessages(removeAll?: boolean): void {
+    if (this.unreadMessages !== 0) {
+      if (removeAll) {
+        this.unreadMessages = 0;
+      } else {
+        this.unreadMessages -= 1;
+      }
+      if (this.unreadMessages === 0) {
+        this.scrollButton.classList.remove(
+          "message-history__scroll-button_unread-message",
+        );
+        this.scrollButtonText.textContent = "";
+      }
+    }
+  }
+
+  public deleteMessage(messageId: string): Message | undefined {
+    const message = this.findMessage(messageId);
+    if (message) {
+      const index = this.messages.indexOf(message);
+      this.messages.splice(index, 1);
+      message.view.removeView();
+      return message;
+    }
   }
 
   private configureView(): HTMLElement[] {

@@ -107,4 +107,17 @@ export class Sender {
     };
     this.getSocket().send(JSON.stringify(request));
   }
+
+  public deleteMessage(messageId: string): void {
+    const request = {
+      id: "",
+      type: "MSG_DELETE",
+      payload: {
+        message: {
+          id: messageId,
+        },
+      },
+    };
+    this.getSocket().send(JSON.stringify(request));
+  }
 }

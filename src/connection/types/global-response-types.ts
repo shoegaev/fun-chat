@@ -10,6 +10,7 @@ export enum ResType {
   messageHistory = "MSG_FROM_USER",
   messageRead = "MSG_READ",
   messageDeliver = "MSG_DELIVER",
+  messageDelete = "MSG_DELETE",
 }
 
 export interface ServerRes {

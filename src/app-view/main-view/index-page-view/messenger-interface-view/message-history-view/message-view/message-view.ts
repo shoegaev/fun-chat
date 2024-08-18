@@ -20,6 +20,7 @@ export interface MessageParams {
   status: MessageStatus;
   edited: boolean;
   text: string;
+  id: string;
 }
 
 export class MessageView extends View {
@@ -59,10 +60,21 @@ export class MessageView extends View {
       this.deleteButton,
       this.text,
     ] = this.configureView();
+    this.deleteButton.addEventListener(
+      "click",
+      this.deleteButtonOnCLick.bind(this),
+    );
   }
 
   public setStatus(status: MessageStatus) {
     this.status.textContent = status;
+    this.params.status = status;
+  }
+
+  public deleteButtonOnCLick(): void {
+    if (!this.params.incoming) {
+      this.connection.sender.deleteMessage(this.params.id);
+    }
   }
 
   private configureView(): HTMLElement[] {
@@ -75,8 +87,7 @@ export class MessageView extends View {
       tag: "div",
       cssClasses: ["message__message-container"],
     });
-    const [header, status, editButton, deleteButton] =
-      this.createHeader();
+    const [header, status, editButton, deleteButton] = this.createHeader();
     const messageFooter = new ElementCreator({
       tag: "div",
       cssClasses: ["message__message-footer"],
@@ -150,6 +161,6 @@ export class MessageView extends View {
     statusesContainer.apendInnerElements(status);
     buttonsContainer.apendInnerElements(editButton, deleteButton);
     header.apendInnerElements(statusesContainer, buttonsContainer);
-    return [header, status, editButton, editButton, deleteButton];
+    return [header, status, editButton, deleteButton];
   }
 }
