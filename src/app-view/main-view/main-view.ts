@@ -6,6 +6,7 @@ import { IndexPageView } from "./index-page-view/index-page-view";
 import { Pages, Router } from "../../router/router";
 import { InfoPageView } from "./info-page-view/info-page-view";
 import { NotFoundPageView } from "./not-found-page-view/not-found-page-view";
+import "./main-style.scss";
 
 type InnerViews = [
   LoginPageView,

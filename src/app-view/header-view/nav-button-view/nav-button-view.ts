@@ -16,7 +16,7 @@ export class NavButtonView extends View {
   constructor(params: NavButtonParams) {
     const NAV_BUTTON_PARARMS: ElementParametrs = {
       tag: "div",
-      cssClasses: ["button", ...params.cssClasses],
+      cssClasses: ["nav-button", ...params.cssClasses],
     };
     super(NAV_BUTTON_PARARMS);
     this.params = params;
@@ -27,7 +27,7 @@ export class NavButtonView extends View {
     this.addInnerElements([
       {
         tag: "span",
-        cssClasses: ["button__text"],
+        cssClasses: ["nav-button__text"],
         textContent: this.params.buttonText,
       },
     ]);
@@ -41,10 +41,10 @@ export class NavButtonView extends View {
     this.params.buttons.forEach((button) => {
       button.removeSelectedStatus();
     });
-    this.getHtmlElement().classList.add("button_selected");
+    this.getHtmlElement().classList.add("nav-button_selected");
   }
 
   public removeSelectedStatus(): void {
-    this.getHtmlElement().classList.remove("button_selected");
+    this.getHtmlElement().classList.remove("nav-button_selected");
   }
 }

@@ -21,7 +21,7 @@ export class HeaderView extends View {
     this.addInnerElements([{ tag: "nav", cssClasses: ["navigation"] }]);
     const mainButton = new NavButtonView({
       page: Pages.index,
-      cssClasses: ["navigation__button"],
+      cssClasses: ["navigation__nav-button"],
       buttonText: "Main-page",
       callback: () => {
         router.navigate({ page: Pages.index });

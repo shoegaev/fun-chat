@@ -1,5 +1,51 @@
 @import "../../variables.scss";
 .navigation {
   display: flex;
-  justify-content: space-between;
+  background-color: $color-background;
+  border-bottom: $border-interfaceBorder;
+  height: 35px;
+}
+.nav-button {
+  text-align: center;
+  padding: 5px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+.nav-button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: $color-interfaceBorderIntence;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.nav-button.nav-button_disabled {
+  cursor: auto;
+}
+.nav-button_disabled {
+  opacity: 0.4;
+}
+.nav-button.nav-button_selected::after {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .nav-button:hover {
+    background-color: $color-backgroundHovered;
+  }
+  .nav-button.nav-button_disabled:hover {
+    background-color: transparent;
+  }
+}
+@media (hover: none) {
+  .nav-button:active {
+    background-color: $color-backgroundHovered;
+  }
+  .nav-button.nav-button_disabled:hover {
+    background-color: transparent;
+  }
 }

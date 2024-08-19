@@ -1,0 +1,8 @@
+@import "../../variables.scss";
+.content {
+  height: 700px;
+  background-color: $color-interfaceBackground;
+  display: flex;
+  align-items: center;
+  max-height: calc(100vh - 35px);
+}

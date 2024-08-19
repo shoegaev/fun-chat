@@ -1,9 +1,26 @@
 @import "../../../../../variables.scss";
 .user-list {
-  width: 100%;
+  width: calc(100% - 5px);
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow-y: scroll;
+  padding: 0 10px;
+  align-self: flex-start;
+  flex-shrink: 1;
+}
+.user-list::-webkit-scrollbar {
+  width: 5px;
+}
+.user-list::-webkit-scrollbar {
+  background-color: $color-interfaceBackgroundHovered;
+  border-radius: $interfaceBorderRadius;
+}
+.user-list::-webkit-scrollbar-thumb {
+  background-color: $color-interfaceBorder;
+  width: 10px;
+  height: 20px;
+  border-radius: $interfaceBorderRadius;
 }
 .user-list_online-filter {
   .user:not(.user_online) {

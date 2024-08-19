@@ -4,11 +4,12 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 3px 5px;
+  padding: 0 10px;
   gap: 3px;
   transition: height 0.2s ease;
-  height: 27px;
+  height: 30px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .filters__heading {
   padding-left: 20px;
@@ -24,7 +25,6 @@
 }
 
 .filters__minimize-button {
-  width: 70px;
   padding: 3px 3px;
   border-radius: $interfaceBorderRadius;
   position: relative;
@@ -45,7 +45,7 @@
       transform-origin: center;
     }
   }
-  height: 90px;
+  height: 100px;
 }
 .filters__list {
   display: flex;

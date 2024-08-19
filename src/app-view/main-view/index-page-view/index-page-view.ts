@@ -44,7 +44,7 @@ export class IndexPageView extends View {
 
   private createUserSelectorView(): UserSelectorView {
     const userList = new UserSelectorView(
-      ["index-page__users-list"],
+      ["index-page__user-selector"],
       this.router,
     );
     this.content.append(userList.getHtmlElement());

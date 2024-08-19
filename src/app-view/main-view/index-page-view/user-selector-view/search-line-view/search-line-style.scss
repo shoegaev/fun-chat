@@ -4,6 +4,7 @@
   position: relative;
   height: 20px;
   display: flex;
+  padding: 0 10px;
   .search-line__input {
     padding: 2px 30px 2px 5px;
     width: 100%;
@@ -11,6 +12,7 @@
     border: none;
     border-top-left-radius: $interfaceBorderRadius;
     border-bottom-left-radius: $interfaceBorderRadius;
+    font-size: 0.8em;
   }
   .search-line__input:focus {
     outline: none;
@@ -21,7 +23,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 25px;
+    right: 35px;
     cursor: pointer;
     display: flex;
     justify-content: center;
