@@ -136,8 +136,12 @@ export class FiltersView extends View {
       }
     });
     this.unreadFilter.addEventListener("click", () => {
-      changeSelectedStatus(this.unreadFilter);
-      // отфильтровать
+      const filterIsOn = changeSelectedStatus(this.unreadFilter);
+      if (filterIsOn) {
+        this.userListView.filterByUnreadMessages();
+      } else {
+        this.userListView.stopFilterByUnreadMessages();
+      }
     });
   }
 }

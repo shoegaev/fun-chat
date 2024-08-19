@@ -72,6 +72,14 @@ export class UserListView extends View {
     this.getHtmlElement().classList.remove("user-list_online-filter");
   }
 
+  public filterByUnreadMessages(): void {
+    this.getHtmlElement().classList.add("user-list_unread-messages-filter");
+  }
+
+  public stopFilterByUnreadMessages(): void {
+    this.getHtmlElement().classList.remove("user-list_unread-messages-filter");
+  }
+
   public filterByName(text: string): void {
     this.users.userArr.forEach((user) => {
       if (

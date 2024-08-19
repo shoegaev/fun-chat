@@ -31,3 +31,9 @@
 .user_filtered-by-name {
   display: none;
 }
+.user-list_unread-messages-filter {
+  .user:not(.user_unread-messages) {
+    @include hidden;
+    display: none;
+  }
+}
