@@ -1,4 +1,3 @@
-
 export enum Pages {
   index = "index",
   info = "info",
@@ -10,6 +9,7 @@ export interface Route {
   hasResource: boolean;
   page: Pages;
   callback: (resource?: string) => void;
+  exitCallback?: () => void;
 }
 
 export interface UrlParams {
@@ -20,8 +20,11 @@ export interface UrlParams {
 export class Router {
   private routes: Route[];
 
+  private currentRoute: Route | null;
+
   constructor(routes: Route[]) {
     this.routes = routes;
+    this.currentRoute = null;
     window.addEventListener("popstate", () => {
       this.navigate();
     });
@@ -45,6 +48,10 @@ export class Router {
     } else {
       route?.callback(urlParams.resource);
     }
+    if (this.currentRoute?.exitCallback) {
+      this.currentRoute.exitCallback();
+    }
+    this.currentRoute = route;
   }
 
   private pushState(urlParams: UrlParams): void {

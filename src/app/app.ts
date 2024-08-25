@@ -93,10 +93,14 @@ export class App {
         page: Pages.login,
         callback: () => {
           this.setPage(Pages.login);
+          this.appView.mainView.loginPageView.setKeyDownEvent()
           if (this.connection.isUserAuthorized()) {
             this.connection.sender.logaut();
           }
         },
+        exitCallback: ()=>{
+          this.appView.mainView.loginPageView.removeKeyDownEvent()
+        }
       },
       {
         hasResource: false,

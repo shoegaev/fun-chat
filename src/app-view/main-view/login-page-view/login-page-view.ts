@@ -14,6 +14,8 @@ export class LoginPageView extends View {
 
   private button: HTMLElement;
 
+  private keyDownEventHandler: ((event: KeyboardEvent) => void) | null;
+
   innerFields: InputFieldView[];
 
   constructor(connection: Connection) {
@@ -26,9 +28,10 @@ export class LoginPageView extends View {
     this.configureView();
     [this.inputsFrame, this.button] = this.assignInnerElements();
     this.innerFields = [];
+    this.keyDownEventHandler = null;
     this.createLoginInputField();
     this.createPasswordInputField();
-    this.buttonOnClick();
+    this.button.addEventListener("click", this.buttonClickHandler.bind(this));
   }
 
   public clearInputs(): void {
@@ -101,6 +104,29 @@ export class LoginPageView extends View {
     }
   }
 
+  private onKeyDown(event: KeyboardEvent): void {
+    if (event.key !== "Enter") {
+      return;
+    }
+    const activeField = this.innerFields.find(
+      (field) => field.input === document.activeElement,
+    );
+    if (activeField) {
+      this.buttonClickHandler();
+    }
+  }
+
+  public setKeyDownEvent(): void {
+    this.keyDownEventHandler = this.onKeyDown.bind(this);
+    window.addEventListener("keydown", this.keyDownEventHandler);
+  }
+
+  public removeKeyDownEvent(): void {
+    if (this.keyDownEventHandler) {
+      window.removeEventListener("keydown", this.keyDownEventHandler);
+    }
+  }
+
   private createLoginInputField() {
     const inputFieldParams: InputFieldParams = {
       labelText: "Login",
@@ -170,13 +196,11 @@ export class LoginPageView extends View {
     this.innerFields.push(inputField);
   }
 
-  private buttonOnClick(): void {
-    this.button.addEventListener("click", () => {
-      if (this.isAllFieldsDataValid()) {
-        const login = this.innerFields[0].getValue();
-        const password = this.innerFields[1].getValue();
-        this.connection.sender.login(login, password);
-      }
-    });
+  private buttonClickHandler(): void {
+    if (this.isAllFieldsDataValid()) {
+      const login = this.innerFields[0].getValue();
+      const password = this.innerFields[1].getValue();
+      this.connection.sender.login(login, password);
+    }
   }
 }
