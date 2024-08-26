@@ -37,6 +37,12 @@ export class SearchLineView extends View {
     const searchLineInput = new ElementCreator({
       tag: "input",
       cssClasses: ["search-line__input"],
+      atributes: [
+        {
+          name: "placeholder",
+          value: "Find a user...",
+        },
+      ],
     });
     const searchLineClearButton = new ElementCreator({
       tag: "div",
@@ -53,6 +59,20 @@ export class SearchLineView extends View {
       ],
     });
     searchLineClearButton.apendInnerElements(cross);
+    const searchLineSearchButton = this.createSearchButton();
+    this.viewCreator.apendInnerElements(
+      searchLineInput,
+      searchLineClearButton,
+      searchLineSearchButton,
+    );
+    return [
+      searchLineInput.getElement() as HTMLInputElement,
+      searchLineClearButton.getElement(),
+      searchLineSearchButton,
+    ];
+  }
+
+  private createSearchButton(): HTMLElement {
     const searchLineSearchButton = new ElementCreator({
       tag: "div",
       cssClasses: ["search-line__search-button"],
@@ -68,16 +88,7 @@ export class SearchLineView extends View {
       ],
     });
     searchLineSearchButton.apendInnerElements(searchLineMagnifierIcon);
-    this.getHtmlElement().append(
-      searchLineInput.getElement(),
-      searchLineClearButton.getElement(),
-      searchLineSearchButton.getElement(),
-    );
-    return [
-      searchLineInput.getElement() as HTMLInputElement,
-      searchLineClearButton.getElement(),
-      searchLineSearchButton.getElement(),
-    ];
+    return searchLineSearchButton.getElement();
   }
 
   private searchButtonOnClick(): void {

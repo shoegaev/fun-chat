@@ -18,6 +18,12 @@ export class HeaderView extends View {
 
   private readonly logoutButton: HTMLElement;
 
+  private readonly modalWindow: HTMLElement;
+
+  private readonly modalWindowYesButton: HTMLElement;
+
+  private readonly modalWindowNoButton: HTMLElement;
+
   constructor(router: Router, connection: Connection) {
     const HEADER_PARAMS: ElementParametrs = {
       tag: "header",
@@ -28,9 +34,9 @@ export class HeaderView extends View {
     this.connection = connection;
     [this.userPanel, this.userLogin, this.logoutButton] =
       this.configureView(router);
-    this.logoutButton.addEventListener("click", () => {
-      connection.sender.logaut();
-    });
+    [this.modalWindow, this.modalWindowYesButton, this.modalWindowNoButton] =
+      this.createModalWindow();
+    this.addEventListeners(connection);
   }
 
   public openUserPanel(): void {
@@ -54,6 +60,22 @@ export class HeaderView extends View {
     this.buttons.forEach((button) => {
       button.removeSelectedStatus();
     });
+  }
+
+  private openModalWindow(): void {
+    document.body.style.overflow = "hidden";
+    this.getHtmlElement().append(this.modalWindow);
+    setTimeout(() => {
+      this.modalWindow.classList.add("modal-window__open");
+    }, 0);
+  }
+
+  private closeModalWindow(): void {
+    this.modalWindow.classList.remove("modal-window__open");
+    document.body.style.overflow = "auto";
+    setTimeout(() => {
+      this.modalWindow.remove();
+    }, 200);
   }
 
   private configureView(router: Router): HTMLElement[] {
@@ -139,5 +161,59 @@ export class HeaderView extends View {
     });
     logautButton.apendInnerElements(logautButtonText, logautButtonIcon);
     return logautButton.getElement();
+  }
+
+  private createModalWindow(): HTMLElement[] {
+    const modalWindow = new ElementCreator({
+      tag: "div",
+      cssClasses: ["modal-window"],
+    });
+    const modalWindowContent = new ElementCreator({
+      tag: "div",
+      cssClasses: ["modal-window__content"],
+    });
+    const modalWindowText = new ElementCreator({
+      tag: "span",
+      cssClasses: ["modal-window__text"],
+      textContent: "Are you sure you want to logout?",
+    });
+    const modalWindowButtons = new ElementCreator({
+      tag: "div",
+      cssClasses: ["modal-window__buttons-container"],
+    });
+    const modalWindowYesButton = new ElementCreator({
+      tag: "div",
+      cssClasses: ["modal-window__button"],
+      textContent: "Yes",
+    });
+    const modalWindowNoButton = new ElementCreator({
+      tag: "div",
+      cssClasses: ["modal-window__button"],
+      textContent: "No",
+    });
+    modalWindowButtons.apendInnerElements(
+      modalWindowYesButton,
+      modalWindowNoButton,
+    );
+    modalWindowContent.apendInnerElements(modalWindowText, modalWindowButtons);
+    modalWindow.apendInnerElements(modalWindowContent);
+    return [
+      modalWindow.getElement(),
+      modalWindowYesButton.getElement(),
+      modalWindowNoButton.getElement(),
+    ];
+  }
+
+  private addEventListeners(connection: Connection): void {
+    this.logoutButton.addEventListener("click", () => {
+      this.openModalWindow();
+    });
+    this.modalWindowYesButton.addEventListener("click", () => {
+      connection.sender.logaut();
+      this.closeModalWindow();
+    });
+    this.modalWindowNoButton.addEventListener("click", () => {
+      this.closeModalWindow();
+    });
   }
 }
