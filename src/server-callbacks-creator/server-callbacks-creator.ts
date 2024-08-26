@@ -71,9 +71,15 @@ export class ServerCallbacksCreator {
         type: ResType.login,
         callback: () => {
           this.loadingWindowView.hide();
+          this.appView.headerView.openUserPanel();
           this.appView.mainView.loginPageView.clearInputs();
           this.connection.sender.getUserList();
           this.router.navigate({ page: Pages.index });
+          if (this.connection.authorizedUser[0]?.login) {
+            this.appView.headerView.setUserLogin(
+              this.connection.authorizedUser[0]?.login,
+            );
+          }
         },
       },
       {
@@ -81,11 +87,13 @@ export class ServerCallbacksCreator {
         callback: () => {
           const userSelectorView = this.indexPageView.userSelectorView;
           userSelectorView.userListView.clearList();
+          this.appView.headerView.closeUserPanel();
           userSelectorView.userListView.removeAllFilters();
           userSelectorView.filtersView.unselectAllFilters();
           userSelectorView.filtersView.minimizeFilters();
           this.indexPageView.userSelectorView.searchLineView.clearInput();
           this.indexPageView.messengerInterfaceView.closeMessageHistory();
+          this.router.navigate({ page: Pages.login });
         },
       },
     );

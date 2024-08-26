@@ -28,7 +28,7 @@ export class AppView extends View {
   }
 
   private createInnerViews(connection: Connection, router: Router): InnerViews {
-    const header = new HeaderView(router);
+    const header = new HeaderView(router, connection);
     const main = new MainView(connection, router);
     const footer = new FooterView();
     this.viewCreator.apendInnerElements(
