@@ -5,4 +5,10 @@
   display: flex;
   align-items: center;
   max-height: calc(100vh - 35px);
+  position: relative;
+}
+@media (max-width: 800px) {
+  .content {
+    margin-top: 36px;
+  }
 }

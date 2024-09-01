@@ -3,14 +3,29 @@ import { ElementCreator, ElementParametrs } from "../../util/element-creator";
 import { Pages, Router } from "../../router/router";
 import { Connection } from "../../connection/connection";
 import { NavButtonView } from "./nav-button-view/nav-button-view";
+import { UserSelectorView } from "../main-view/index-page-view/user-selector-view/user-selector-view";
 import "./header-style.scss";
 import logautIcon from "./logout-icon.svg";
 import userIcon from "./user-icon.svg";
+import userListIcon from "./user-list-icon.svg";
+
+type ModalWindow = {
+  container: HTMLElement;
+  modalWindowYesButton: HTMLElement;
+  modalWindowNoButton: HTMLElement;
+};
+type MenuButtons = {
+  container: HTMLElement;
+  userListButton: HTMLElement;
+  navigationButton: HTMLElement;
+};
 
 export class HeaderView extends View {
   private buttons: NavButtonView[];
 
   private readonly connection: Connection;
+
+  private readonly headerContent: HTMLElement;
 
   private readonly userPanel: HTMLElement;
 
@@ -18,13 +33,15 @@ export class HeaderView extends View {
 
   private readonly logoutButton: HTMLElement;
 
-  private readonly modalWindow: HTMLElement;
+  private readonly modalWindow: ModalWindow;
 
-  private readonly modalWindowYesButton: HTMLElement;
+  private readonly menuButtons: MenuButtons;
 
-  private readonly modalWindowNoButton: HTMLElement;
-
-  constructor(router: Router, connection: Connection) {
+  constructor(
+    router: Router,
+    connection: Connection,
+    userSelector: UserSelectorView,
+  ) {
     const HEADER_PARAMS: ElementParametrs = {
       tag: "header",
       cssClasses: ["header"],
@@ -32,19 +49,37 @@ export class HeaderView extends View {
     super(HEADER_PARAMS);
     this.buttons = [];
     this.connection = connection;
-    [this.userPanel, this.userLogin, this.logoutButton] =
-      this.configureView(router);
-    [this.modalWindow, this.modalWindowYesButton, this.modalWindowNoButton] =
-      this.createModalWindow();
-    this.addEventListeners(connection);
+    [
+      this.headerContent,
+      this.userPanel,
+      this.userLogin,
+      this.logoutButton,
+      this.menuButtons,
+    ] = this.configureView(router);
+    this.modalWindow = this.createModalWindow();
+    this.addEventListeners(connection, userSelector);
   }
 
-  public openUserPanel(): void {
-    this.userPanel.classList.remove("user-panel__closed");
+  public onLogin(): void {
+    this.userPanel.classList.remove("user-panel_closed");
+    this.showUserListButton();
   }
 
-  public closeUserPanel(): void {
-    this.userPanel.classList.add("user-panel__closed");
+  public onLogaut(): void {
+    this.userPanel.classList.add("user-panel_closed");
+    this.hideUserListButton();
+  }
+
+  private hideUserListButton(): void {
+    this.menuButtons.userListButton.classList.add(
+      "header__user-list-button_hidden",
+    );
+  }
+
+  private showUserListButton(): void {
+    this.menuButtons.userListButton.classList.remove(
+      "header__user-list-button_hidden",
+    );
   }
 
   public setUserLogin(login: string): void {
@@ -64,55 +99,77 @@ export class HeaderView extends View {
 
   private openModalWindow(): void {
     document.body.style.overflow = "hidden";
-    this.getHtmlElement().append(this.modalWindow);
+    document.body.append(this.modalWindow.container);
     setTimeout(() => {
-      this.modalWindow.classList.add("modal-window__open");
+      this.modalWindow.container.classList.add("modal-window__open");
     }, 0);
   }
 
   private closeModalWindow(): void {
-    this.modalWindow.classList.remove("modal-window__open");
+    this.modalWindow.container.classList.remove("modal-window__open");
     document.body.style.overflow = "auto";
     setTimeout(() => {
-      this.modalWindow.remove();
+      this.modalWindow.container.remove();
     }, 200);
   }
 
-  private configureView(router: Router): HTMLElement[] {
+  // eslint-disable-next-line max-lines-per-function
+  private configureView(
+    router: Router,
+  ): [HTMLElement, HTMLElement, HTMLElement, HTMLElement, MenuButtons] {
     const [userPanel, userLogin, logautButton] = this.createUserPanel();
-    this.viewCreator.apendInnerElements(userPanel);
-    this.addInnerElements([{ tag: "nav", cssClasses: ["navigation"] }]);
+    const navigation = new ElementCreator({
+      tag: "nav",
+      cssClasses: ["header__navigation"],
+    });
+    const headerContent = new ElementCreator({
+      tag: "div",
+      cssClasses: ["header__content"],
+    });
+    headerContent.apendInnerElements(userPanel, navigation);
     const mainButton = new NavButtonView({
       page: Pages.index,
-      cssClasses: ["navigation__nav-button"],
+      cssClasses: ["header__nav-button"],
       buttonText: "Main-page",
       callback: () => {
+        this.closeNavigationMenu();
+        if (this.connection.isUserAuthorized()) {
+          this.showUserListButton();
+        }
         router.navigate({ page: Pages.index });
       },
       buttons: this.buttons,
     });
     const infoButton = new NavButtonView({
       page: Pages.info,
-      cssClasses: ["navigation__nav-button"],
+      cssClasses: ["header__nav-button"],
       buttonText: "Information",
       callback: () => {
+        this.closeNavigationMenu();
+        this.hideUserListButton();
         router.navigate({ page: Pages.info });
       },
       buttons: this.buttons,
     });
     [mainButton, infoButton].forEach((button) => {
       this.buttons.push(button);
-      this.getHtmlElement()
-        .querySelector("nav")
-        ?.append(button.getHtmlElement());
+      navigation.apendInnerElements(button.getHtmlElement());
     });
-    return [userPanel, userLogin, logautButton];
+    const menuButtons = this.createMenuButtons();
+    this.viewCreator.apendInnerElements(menuButtons.container, headerContent);
+    return [
+      headerContent.getElement(),
+      userPanel,
+      userLogin,
+      logautButton,
+      menuButtons,
+    ];
   }
 
   private createUserPanel(): HTMLElement[] {
     const panel = new ElementCreator({
       tag: "div",
-      cssClasses: ["user-panel", "user-panel__closed"],
+      cssClasses: ["user-panel", "user-panel_closed"],
     });
     const userLoginContainer = new ElementCreator({
       tag: "div",
@@ -163,7 +220,45 @@ export class HeaderView extends View {
     return logautButton.getElement();
   }
 
-  private createModalWindow(): HTMLElement[] {
+  private createMenuButtons(): MenuButtons {
+    const container = new ElementCreator({
+      tag: "div",
+      cssClasses: ["header__menu-buttons"],
+    });
+    const userListButton = new ElementCreator({
+      tag: "div",
+      cssClasses: [
+        "header__user-list-button",
+        "header__user-list-button_hidden",
+        "nav-button",
+      ],
+    });
+    const userListButtonIcon = new ElementCreator({
+      tag: "img",
+      cssClasses: ["header__user-list-button-icon"],
+      atributes: [{ name: "src", value: userListIcon }],
+    });
+    userListButton.apendInnerElements(userListButtonIcon);
+    const navigationButton = new ElementCreator({
+      tag: "div",
+      cssClasses: ["header__navigation-button", "nav-button"],
+    });
+    for (let i = 0; i < 3; i++) {
+      const navigationButtonStick = new ElementCreator({
+        tag: "div",
+        cssClasses: ["header__navigation-button-stick"],
+      });
+      navigationButton.apendInnerElements(navigationButtonStick);
+    }
+    container.apendInnerElements(userListButton, navigationButton);
+    return {
+      container: container.getElement(),
+      userListButton: userListButton.getElement(),
+      navigationButton: navigationButton.getElement(),
+    };
+  }
+
+  private createModalWindow(): ModalWindow {
     const modalWindow = new ElementCreator({
       tag: "div",
       cssClasses: ["modal-window"],
@@ -197,23 +292,49 @@ export class HeaderView extends View {
     );
     modalWindowContent.apendInnerElements(modalWindowText, modalWindowButtons);
     modalWindow.apendInnerElements(modalWindowContent);
-    return [
-      modalWindow.getElement(),
-      modalWindowYesButton.getElement(),
-      modalWindowNoButton.getElement(),
-    ];
+    return {
+      container: modalWindow.getElement(),
+      modalWindowNoButton: modalWindowNoButton.getElement(),
+      modalWindowYesButton: modalWindowYesButton.getElement(),
+    };
   }
 
-  private addEventListeners(connection: Connection): void {
+  private openNavigationMenu(): void {
+    this.getHtmlElement().classList.add("header_navigation-open");
+  }
+
+  private closeNavigationMenu(): void {
+    this.getHtmlElement().classList.remove("header_navigation-open");
+  }
+
+  private addEventListeners(
+    connection: Connection,
+    userSelector: UserSelectorView,
+  ): void {
     this.logoutButton.addEventListener("click", () => {
       this.openModalWindow();
     });
-    this.modalWindowYesButton.addEventListener("click", () => {
+    this.modalWindow.modalWindowYesButton.addEventListener("click", () => {
       connection.sender.logaut();
       this.closeModalWindow();
+      this.closeNavigationMenu();
     });
-    this.modalWindowNoButton.addEventListener("click", () => {
+    this.modalWindow.modalWindowNoButton.addEventListener("click", () => {
       this.closeModalWindow();
+    });
+    this.menuButtons.navigationButton.addEventListener("click", () => {
+      if (this.getHtmlElement().classList.contains("header_navigation-open")) {
+        this.closeNavigationMenu();
+      } else {
+        this.openNavigationMenu();
+      }
+    });
+    this.menuButtons.userListButton.addEventListener("click", () => {
+      if (userSelector.isSelectorOpened()) {
+        userSelector.close();
+      } else {
+        userSelector.open();
+      }
     });
   }
 }

@@ -40,3 +40,18 @@
   min-height: 8%;
   width: 100%;
 }
+@media (max-width: 1200px) {
+  .messenger-interface {
+    width: 70%;
+  }
+}
+@media (max-width: 850px) {
+  .messenger-interface {
+    width: 65%;
+  }
+}
+@media (max-width: 800px) {
+  .messenger-interface {
+    border-left: none;
+  }
+}

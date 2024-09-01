@@ -9,7 +9,7 @@
 }
 @keyframes loading-stick_visible {
   12% {
-    background-color: $color-background;
+    background-color: $color-headerBackground;
   }
   25% {
     background-color: transparent;
@@ -22,7 +22,7 @@ $animatio-duration: 0.8s;
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background-color: rgba($color-background, 0.6);
+  background-color: rgba($color-headerBackground, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;

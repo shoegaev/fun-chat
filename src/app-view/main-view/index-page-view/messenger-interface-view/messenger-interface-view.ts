@@ -80,7 +80,7 @@ export class MessengerInterfaceView extends View {
     const messageHistoryPlaceholder = new ElementCreator({
       tag: "span",
       cssClasses: ["messenger-interface__message-history-placeholder"],
-      textContent: "Select user to start conversation",
+      textContent: "Select user from user list to start conversation",
     });
     messageHistoryContainer.apendInnerElements(messageHistoryPlaceholder);
     const messageInputField = new MessageInputFieldView(

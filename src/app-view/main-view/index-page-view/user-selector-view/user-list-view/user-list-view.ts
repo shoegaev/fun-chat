@@ -9,13 +9,20 @@ export class UserListView extends View {
 
   private router: Router;
 
-  constructor(cssClasses: string[], router: Router) {
+  private userClickCallback: () => void;
+
+  constructor(
+    cssClasses: string[],
+    router: Router,
+    userClickCallback: () => void,
+  ) {
     const USER_LIST_PARAMS: ElementParametrs = {
       tag: "div",
       cssClasses: ["user-list", ...cssClasses],
     };
     super(USER_LIST_PARAMS);
     this.router = router;
+    this.userClickCallback = userClickCallback;
     this.users = {
       selectedUser: null,
       userArr: [],
@@ -41,6 +48,7 @@ export class UserListView extends View {
       cssClasses: ["user-selector__user"],
       callback: () => {
         this.router.navigate({ page: Pages.index, resource: login });
+        this.userClickCallback();
       },
     });
     this.users.userArr.push(user);

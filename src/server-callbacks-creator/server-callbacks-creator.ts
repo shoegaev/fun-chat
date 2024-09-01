@@ -71,7 +71,7 @@ export class ServerCallbacksCreator {
         type: ResType.login,
         callback: () => {
           this.loadingWindowView.hide();
-          this.appView.headerView.openUserPanel();
+          this.appView.headerView.onLogin();
           this.appView.mainView.loginPageView.clearInputs();
           this.connection.sender.getUserList();
           this.router.navigate({ page: Pages.index });
@@ -87,7 +87,7 @@ export class ServerCallbacksCreator {
         callback: () => {
           const userSelectorView = this.indexPageView.userSelectorView;
           userSelectorView.userListView.clearList();
-          this.appView.headerView.closeUserPanel();
+          this.appView.headerView.onLogaut();
           userSelectorView.userListView.removeAllFilters();
           userSelectorView.filtersView.unselectAllFilters();
           userSelectorView.filtersView.minimizeFilters();

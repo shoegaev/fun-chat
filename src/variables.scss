@@ -3,8 +3,8 @@ $color-interfaceBackground: rgb(33, 38, 41);
 $color-interfaceBackgroundHovered: rgb(47, 54, 58);
 
 $color-body: rgb(28, 42, 45);
-$color-background: rgb(39, 63, 67);
-$color-backgroundHovered: rgb(59, 87, 92);
+$color-headerBackground: rgb(39, 63, 67);
+$color-headerBackgroundHovered: rgb(59, 87, 92);
 $color-interfaceBorder: rgb(119, 163, 169);
 $color-interfaceBorderIntence: rgb(152, 202, 209);
 $color-text: rgb(227, 238, 240);
@@ -18,7 +18,6 @@ $interfaceBorderRadius: 5px;
 
 
 // fonts
-
 
 @mixin hidden {
   visibility: hidden;
