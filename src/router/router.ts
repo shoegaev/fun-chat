@@ -46,12 +46,12 @@ export class Router {
     if (!route.hasResource && urlParams?.resource) {
       this.navigate({ page: route.page });
     } else {
+      if (this.currentRoute?.exitCallback) {
+        this.currentRoute.exitCallback();
+      }
+      this.currentRoute = route;
       route?.callback(urlParams.resource);
     }
-    if (this.currentRoute?.exitCallback) {
-      this.currentRoute.exitCallback();
-    }
-    this.currentRoute = route;
   }
 
   private pushState(urlParams: UrlParams): void {
