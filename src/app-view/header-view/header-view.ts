@@ -4,16 +4,12 @@ import { Pages, Router } from "../../router/router";
 import { Connection } from "../../connection/connection";
 import { NavButtonView } from "./nav-button-view/nav-button-view";
 import { UserSelectorView } from "../main-view/index-page-view/user-selector-view/user-selector-view";
+import { ModalWindowView } from "../modal-window-view/modal-window-view";
 import "./header-style.scss";
 import logautIcon from "./logout-icon.svg";
 import userIcon from "./user-icon.svg";
 import userListIcon from "./user-list-icon.svg";
 
-type ModalWindow = {
-  container: HTMLElement;
-  modalWindowYesButton: HTMLElement;
-  modalWindowNoButton: HTMLElement;
-};
 type MenuButtons = {
   container: HTMLElement;
   userListButton: HTMLElement;
@@ -33,14 +29,13 @@ export class HeaderView extends View {
 
   private readonly logoutButton: HTMLElement;
 
-  private readonly modalWindow: ModalWindow;
-
   private readonly menuButtons: MenuButtons;
 
   constructor(
     router: Router,
     connection: Connection,
     userSelector: UserSelectorView,
+    modalWindow: ModalWindowView,
   ) {
     const HEADER_PARAMS: ElementParametrs = {
       tag: "header",
@@ -56,8 +51,7 @@ export class HeaderView extends View {
       this.logoutButton,
       this.menuButtons,
     ] = this.configureView(router);
-    this.modalWindow = this.createModalWindow();
-    this.addEventListeners(connection, userSelector);
+    this.addEventListeners(connection, userSelector, modalWindow);
   }
 
   public onLogin(): void {
@@ -95,22 +89,6 @@ export class HeaderView extends View {
     this.buttons.forEach((button) => {
       button.removeSelectedStatus();
     });
-  }
-
-  private openModalWindow(): void {
-    document.body.style.overflow = "hidden";
-    document.body.append(this.modalWindow.container);
-    setTimeout(() => {
-      this.modalWindow.container.classList.add("modal-window__open");
-    }, 0);
-  }
-
-  private closeModalWindow(): void {
-    this.modalWindow.container.classList.remove("modal-window__open");
-    document.body.style.overflow = "auto";
-    setTimeout(() => {
-      this.modalWindow.container.remove();
-    }, 200);
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -258,47 +236,6 @@ export class HeaderView extends View {
     };
   }
 
-  private createModalWindow(): ModalWindow {
-    const modalWindow = new ElementCreator({
-      tag: "div",
-      cssClasses: ["modal-window"],
-    });
-    const modalWindowContent = new ElementCreator({
-      tag: "div",
-      cssClasses: ["modal-window__content"],
-    });
-    const modalWindowText = new ElementCreator({
-      tag: "span",
-      cssClasses: ["modal-window__text"],
-      textContent: "Are you sure you want to logout?",
-    });
-    const modalWindowButtons = new ElementCreator({
-      tag: "div",
-      cssClasses: ["modal-window__buttons-container"],
-    });
-    const modalWindowYesButton = new ElementCreator({
-      tag: "div",
-      cssClasses: ["modal-window__button"],
-      textContent: "Yes",
-    });
-    const modalWindowNoButton = new ElementCreator({
-      tag: "div",
-      cssClasses: ["modal-window__button"],
-      textContent: "No",
-    });
-    modalWindowButtons.apendInnerElements(
-      modalWindowYesButton,
-      modalWindowNoButton,
-    );
-    modalWindowContent.apendInnerElements(modalWindowText, modalWindowButtons);
-    modalWindow.apendInnerElements(modalWindowContent);
-    return {
-      container: modalWindow.getElement(),
-      modalWindowNoButton: modalWindowNoButton.getElement(),
-      modalWindowYesButton: modalWindowYesButton.getElement(),
-    };
-  }
-
   private openNavigationMenu(): void {
     this.getHtmlElement().classList.add("header_navigation-open");
   }
@@ -310,17 +247,22 @@ export class HeaderView extends View {
   private addEventListeners(
     connection: Connection,
     userSelector: UserSelectorView,
+    modalWindow: ModalWindowView,
   ): void {
     this.logoutButton.addEventListener("click", () => {
-      this.openModalWindow();
-    });
-    this.modalWindow.modalWindowYesButton.addEventListener("click", () => {
-      connection.sender.logaut();
-      this.closeModalWindow();
-      this.closeNavigationMenu();
-    });
-    this.modalWindow.modalWindowNoButton.addEventListener("click", () => {
-      this.closeModalWindow();
+      modalWindow.openModalWindow({
+        text: "Are you sure you want to logout?",
+        leftButton: {
+          text: "Yes",
+          callback: () => {
+            connection.sender.logaut();
+            this.closeNavigationMenu();
+          },
+        },
+        rightButton: {
+          text: "No",
+        },
+      });
     });
     this.menuButtons.navigationButton.addEventListener("click", () => {
       if (this.getHtmlElement().classList.contains("header_navigation-open")) {
