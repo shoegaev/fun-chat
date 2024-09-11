@@ -67,7 +67,10 @@ export class ModalWindowView extends View {
       removeListeners(buttonEventHandler);
     };
 
-    const windowEventHandler = () => {
+    const windowEventHandler = (event: Event) => {
+      if (event.target !== event.currentTarget) {
+        return;
+      }
       this.closeWindow();
       removeListeners(buttonEventHandler);
       this.getHtmlElement().removeEventListener("click", windowEventHandler);
