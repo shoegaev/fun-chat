@@ -5,8 +5,8 @@ import {
 } from "../../../../../../util/element-creator";
 import { Connection } from "../../../../../../connection/connection";
 import "./message-style.scss";
-import editIcon from "./edit-icon.svg";
-import deleteIcon from "./delete-icon.svg";
+import editIcon from "../../../../../../../public/assets/icons/edit-icon.svg";
+import deleteIcon from "../../../../../../../public/assets/icons/delete-icon.svg";
 
 export enum MessageStatus {
   sended = "Sended",

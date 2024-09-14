@@ -4,7 +4,7 @@ import {
   ElementParametrs,
 } from "../../../../util/element-creator";
 import "./input-field-style.scss";
-import tickIcon from "./tick-icon.svg";
+import tickIcon from "../../../../../public/assets/icons/tick-icon.svg";
 
 export interface InputFieldParams {
   labelText: string;

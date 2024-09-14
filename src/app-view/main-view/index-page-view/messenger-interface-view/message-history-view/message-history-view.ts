@@ -8,7 +8,7 @@ import { Router, Pages } from "../../../../../router/router";
 import { MessageView, MessageStatus } from "./message-view/message-view";
 import { MessageData } from "../../../../../connection/types/message-data-type";
 import "./message-history-style.scss";
-import downIcon from "./down-icon.svg";
+import downIcon from "../../../../../../public/assets/icons/down-icon.svg";
 
 type Message = { data: MessageData; view: MessageView };
 
@@ -25,7 +25,10 @@ export class MessageHistoryView extends View {
 
   private readonly scrollButtonText: HTMLElement;
 
-  private readonly editModeCalback: (id: string, text?: string | undefined) => void;
+  private readonly editModeCalback: (
+    id: string,
+    text?: string | undefined,
+  ) => void;
 
   private unreadMessages: number;
 

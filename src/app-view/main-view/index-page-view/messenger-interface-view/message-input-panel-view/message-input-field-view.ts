@@ -5,7 +5,7 @@ import {
 } from "../../../../../util/element-creator";
 import { Connection } from "../../../../../connection/connection";
 import { MessageHistoryView } from "../message-history-view/message-history-view";
-import sendIcon from "./send-icon.svg";
+import sendIcon from "../../../../../../public/assets/icons/send-icon.svg";
 import "./message-input-field-style.scss";
 import { ModalWindowView } from "../../../../modal-window-view/modal-window-view";
 

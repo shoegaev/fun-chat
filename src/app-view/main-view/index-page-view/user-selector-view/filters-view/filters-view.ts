@@ -5,8 +5,8 @@ import {
 } from "../../../../../util/element-creator";
 import "./filters-style.scss";
 import { UserListView } from "../user-list-view/user-list-view";
-import triangleIcon from "./triangle-icon.svg";
-import tickIcon from "./tick-icon.svg";
+import triangleIcon from "../../../../../../public/assets/icons/triangle-icon.svg";
+import tickIcon from "../../../../../../public/assets/icons/tick-icon.svg";
 
 export class FiltersView extends View {
   private minimizeButton: HTMLElement;

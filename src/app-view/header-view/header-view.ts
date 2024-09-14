@@ -6,9 +6,9 @@ import { NavButtonView } from "./nav-button-view/nav-button-view";
 import { UserSelectorView } from "../main-view/index-page-view/user-selector-view/user-selector-view";
 import { ModalWindowView } from "../modal-window-view/modal-window-view";
 import "./header-style.scss";
-import logautIcon from "./logout-icon.svg";
-import userIcon from "./user-icon.svg";
-import userListIcon from "./user-list-icon.svg";
+import logautIcon from "../../../public/assets/icons/logout-icon.svg";
+import userIcon from "../../../public/assets/icons/user-icon.svg";
+import userListIcon from "../../../public/assets/icons/user-list-icon.svg";
 
 type MenuButtons = {
   container: HTMLElement;

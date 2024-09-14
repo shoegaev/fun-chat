@@ -4,7 +4,7 @@ import {
   ElementCreator,
 } from "../../../../../util/element-creator";
 import "./user-style.scss";
-import envelopeIcon from "./envelope_icon.svg";
+import envelopeIcon from "../../../../../../public/assets/icons/envelope_icon.svg";
 
 export type Users = {
   selectedUser: null | UserView;
@@ -82,7 +82,7 @@ export class UserView extends View {
     } else {
       this.unreadMessagesNumber += 1;
     }
-    if (this.unreadMessagesNumber < 100){
+    if (this.unreadMessagesNumber < 100) {
       this.unreadMessagesNumberElement.textContent = `(${this.unreadMessagesNumber})`;
     } else {
       this.unreadMessagesNumberElement.textContent = "(99+)";
@@ -96,7 +96,7 @@ export class UserView extends View {
     if (this.unreadMessagesNumber === 0) {
       this.getHtmlElement().classList.remove("user_unread-messages");
     }
-    if (this.unreadMessagesNumber < 100){
+    if (this.unreadMessagesNumber < 100) {
       this.unreadMessagesNumberElement.textContent = `(${this.unreadMessagesNumber})`;
     } else {
       this.unreadMessagesNumberElement.textContent = "(99+)";
