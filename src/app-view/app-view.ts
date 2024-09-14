@@ -4,6 +4,7 @@ import { View } from "../util/view";
 import { MainView } from "./main-view/main-view";
 import { HeaderView } from "./header-view/header-view";
 import { FooterView } from "./footer-view/footer-view";
+import { ModalWindowView } from "./modal-window-view/modal-window-view";
 import { Router } from "../router/router";
 
 type InnerViews = [HeaderView, MainView, FooterView];
@@ -28,11 +29,13 @@ export class AppView extends View {
   }
 
   private createInnerViews(connection: Connection, router: Router): InnerViews {
-    const main = new MainView(connection, router);
+    const modalWindow = new ModalWindowView();
+    const main = new MainView(connection, router, modalWindow);
     const header = new HeaderView(
       router,
       connection,
       main.indexPageView.userSelectorView,
+      modalWindow,
     );
     const footer = new FooterView();
     this.viewCreator.apendInnerElements(

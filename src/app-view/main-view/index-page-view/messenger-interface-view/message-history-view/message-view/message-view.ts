@@ -21,6 +21,7 @@ export interface MessageParams {
   edited: boolean;
   text: string;
   id: string;
+  editButtonCallback: (id: string, text?: string | undefined) => void;
 }
 
 export class MessageView extends View {
@@ -50,6 +51,9 @@ export class MessageView extends View {
     if (params.incoming) {
       MESSAGE_VIEW_PARAMS.cssClasses.push("message_incoming");
     }
+    if (params.edited) {
+      MESSAGE_VIEW_PARAMS.cssClasses.push("message_edited");
+    }
     super(MESSAGE_VIEW_PARAMS);
     this.connection = connection;
     this.params = params;
@@ -64,6 +68,12 @@ export class MessageView extends View {
       "click",
       this.deleteButtonOnCLick.bind(this),
     );
+    this.editButton.addEventListener("click", () => {
+      params.editButtonCallback(
+        this.params.id,
+        this.text.textContent ?? undefined,
+      );
+    });
   }
 
   public setStatus(status: MessageStatus) {
@@ -75,6 +85,11 @@ export class MessageView extends View {
     if (!this.params.incoming) {
       this.connection.sender.deleteMessage(this.params.id);
     }
+  }
+
+  public editText(text: string): void {
+    this.text.textContent = text;
+    this.getHtmlElement().classList.add("message_edited");
   }
 
   private configureView(): HTMLElement[] {

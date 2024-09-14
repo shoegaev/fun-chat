@@ -6,6 +6,7 @@ import { IndexPageView } from "./index-page-view/index-page-view";
 import { Pages, Router } from "../../router/router";
 import { InfoPageView } from "./info-page-view/info-page-view";
 import { NotFoundPageView } from "./not-found-page-view/not-found-page-view";
+import { ModalWindowView } from "../modal-window-view/modal-window-view";
 import "./main-style.scss";
 
 type InnerViews = [
@@ -28,7 +29,11 @@ export class MainView extends View {
 
   private pagesParams: PageParam[];
 
-  constructor(connection: Connection, router: Router) {
+  constructor(
+    connection: Connection,
+    router: Router,
+    modalWindow: ModalWindowView,
+  ) {
     const MAIN_PARAMS: ElementParametrs = {
       tag: "main",
       cssClasses: ["content"],
@@ -39,13 +44,17 @@ export class MainView extends View {
       this.indexPageView,
       this.infoPageView,
       this.notFoundPageView,
-    ] = this.configureView(connection, router);
+    ] = this.configureView(connection, router, modalWindow);
     this.pagesParams = this.getPagesArr();
   }
 
-  private configureView(connection: Connection, router: Router): InnerViews {
+  private configureView(
+    connection: Connection,
+    router: Router,
+    modalWindow: ModalWindowView,
+  ): InnerViews {
     const loginPage = new LoginPageView(connection);
-    const indexPage = new IndexPageView(connection, router);
+    const indexPage = new IndexPageView(connection, router, modalWindow);
     const infoPage = new InfoPageView();
     const notFoundPage = new NotFoundPageView();
     return [loginPage, indexPage, infoPage, notFoundPage];

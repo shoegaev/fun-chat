@@ -7,6 +7,7 @@ import {
   MessageCallback,
   MessageHistoryCallback,
   MessageReadCallback,
+  MessageEditCallback,
 } from "../types/server-callbacks-types";
 import { SomeServerResponse } from "../types/response-type";
 import { SomeServerErrResponse } from "../types/error-response-types";
@@ -89,6 +90,11 @@ export class Receiver {
       (callback as MessageReadCallback).callback(
         data.payload.message.id,
         data.id,
+      );
+    } else if (data.type === ResType.messageEdit) {
+      (callback as MessageEditCallback).callback(
+        data.payload.message.id,
+        data.payload.message.text,
       );
     } else {
       (callback as UserAuthenticationCallback).callback();

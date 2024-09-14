@@ -25,6 +25,8 @@ export class MessageHistoryView extends View {
 
   private readonly scrollButtonText: HTMLElement;
 
+  private readonly editModeCalback: (id: string, text?: string | undefined) => void;
+
   private unreadMessages: number;
 
   private newMessagesLine: HTMLElement | null;
@@ -36,6 +38,7 @@ export class MessageHistoryView extends View {
     login: string,
     connection: Connection,
     router: Router,
+    editModeCalback: (id: string, text?: string | undefined) => void,
   ) {
     const MESSAGE_HISTORY_PARAMS: ElementParametrs = {
       tag: "div",
@@ -49,6 +52,7 @@ export class MessageHistoryView extends View {
     [this.scrollButtonText, this.scrollButton, this.closeButton, this.list] =
       this.configureView();
     this.unreadMessages = 0;
+    this.editModeCalback = editModeCalback;
     this.closeButton.addEventListener("click", () => {
       router.navigate({ page: Pages.index });
     });
@@ -78,6 +82,7 @@ export class MessageHistoryView extends View {
         edited: data.status.isEdited,
         text: data.text,
         id: data.id,
+        editButtonCallback: this.editModeCalback,
       },
     );
     this.messages.push({ data: data, view: message });

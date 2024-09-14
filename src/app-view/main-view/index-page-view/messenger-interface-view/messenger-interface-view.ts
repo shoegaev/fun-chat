@@ -7,20 +7,28 @@ import { Router } from "../../../../router/router";
 import { Connection } from "../../../../connection/connection";
 import { MessageHistoryView } from "./message-history-view/message-history-view";
 import { MessageInputFieldView } from "./message-input-panel-view/message-input-field-view";
+import { ModalWindowView } from "../../../modal-window-view/modal-window-view";
 import "./messenger-interface-style.scss";
 
 export class MessengerInterfaceView extends View {
-  private router: Router;
+  private readonly router: Router;
 
-  private connection: Connection;
+  private readonly connection: Connection;
 
   private readonly messageHistoryArr: [MessageHistoryView | null];
 
-  private messageHistoryContainer: HTMLElement;
+  private readonly messageHistoryContainer: HTMLElement;
 
   public readonly messageInputField: MessageInputFieldView;
 
-  constructor(cssClasses: string[], router: Router, connection: Connection) {
+  public readonly modalWindowView: ModalWindowView;
+
+  constructor(
+    cssClasses: string[],
+    router: Router,
+    connection: Connection,
+    modalWindow: ModalWindowView,
+  ) {
     const MESSENGER_INTERFACE_PARAMS: ElementParametrs = {
       tag: "div",
       cssClasses: [
@@ -32,6 +40,7 @@ export class MessengerInterfaceView extends View {
     super(MESSENGER_INTERFACE_PARAMS);
     this.router = router;
     this.connection = connection;
+    this.modalWindowView = modalWindow;
     this.messageHistoryArr = [null];
     [this.messageHistoryContainer, this.messageInputField] =
       this.configureView();
@@ -44,6 +53,7 @@ export class MessengerInterfaceView extends View {
       login,
       this.connection,
       this.router,
+      this.messageInputField.enableEditMode.bind(this.messageInputField),
     );
     this.messageHistoryContainer.append(messageHistoryView.getHtmlElement());
     this.removeUserNotSelectedClass();
@@ -87,6 +97,7 @@ export class MessengerInterfaceView extends View {
       ["messenger-interface__message-input-field"],
       this.connection,
       this.messageHistoryArr,
+      this.modalWindowView,
     );
     this.viewCreator.apendInnerElements(
       messageHistoryContainer,

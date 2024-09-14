@@ -62,10 +62,17 @@ export interface MessageDeliverCallback extends ServerCallback {
   type: ResType.messageDeliver;
   callback: (messageId: string) => void;
 }
+
 // deletion a message
 export interface MessageDeleteCallback extends ServerCallback {
   type: ResType.messageDelete;
   callback: (messageId: string) => void;
+}
+
+// message editing
+export interface MessageEditCallback extends ServerCallback {
+  type: ResType.messageEdit;
+  callback: (messageId: string, text: string) => void;
 }
 
 export type SomeServerCallback =
@@ -76,4 +83,5 @@ export type SomeServerCallback =
   | MessageHistoryCallback
   | MessageReadCallback
   | MessageDeliverCallback
-  | MessageDeleteCallback;
+  | MessageDeleteCallback
+  | MessageEditCallback;

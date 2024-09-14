@@ -11,6 +11,7 @@ export enum ResType {
   messageRead = "MSG_READ",
   messageDeliver = "MSG_DELIVER",
   messageDelete = "MSG_DELETE",
+  messageEdit = "MSG_EDIT",
 }
 
 export interface ServerRes {

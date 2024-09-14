@@ -120,4 +120,18 @@ export class Sender {
     };
     this.getSocket().send(JSON.stringify(request));
   }
+
+  public editMessage(id: string, text: string) {
+    const request = {
+      id: "",
+      type: "MSG_EDIT",
+      payload: {
+        message: {
+          id: id,
+          text: text,
+        },
+      },
+    };
+    this.getSocket().send(JSON.stringify(request));
+  }
 }

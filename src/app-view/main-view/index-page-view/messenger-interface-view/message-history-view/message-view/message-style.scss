@@ -10,7 +10,7 @@
     width: 50px;
   }
   .message__message-container {
-    min-width: 200px;
+    min-width: 210px;
     max-width: calc(100% - 50px);
     position: relative;
     .message__header {
@@ -22,7 +22,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 5px;
-      font-size: 0.8em;
+      font-size: 0.7em;
       opacity: 0.7;
       height: 15px;
       width: 100%;
@@ -40,6 +40,7 @@
           justify-content: center;
           align-items: center;
           padding: 2px;
+          transition: opacity 0.2s ease;
           cursor: pointer;
           img {
             height: 80%;
@@ -49,9 +50,9 @@
       }
     }
     .message__text {
-      padding: 4px 4px 20px 4px;
+      padding: 4px 4px 25px 4px;
       border-radius: $interfaceBorderRadius;
-      background-color: rgba($color-headerBackground, 0.7);
+      background-color: rgba($color-headerBackground, 0.6);
       word-break: break-word;
     }
     .message__message-footer {
@@ -60,13 +61,14 @@
       left: 0;
       bottom: 0;
       padding: 0 5px 5px 5px;
-      font-size: 0.8em;
-      opacity: 0.7;
+      font-size: 0.7em;
+      opacity: 0.6;
       display: flex;
       justify-content: space-between;
       .message__edited-status {
         opacity: 0;
         visibility: hidden;
+        transition: opacity 0.2s ease;
       }
     }
   }
@@ -84,6 +86,14 @@
   }
   .message__text {
     background-color: $color-interfaceBackgroundHovered;
+  }
+}
+.message.message_edited {
+  .message__message-footer {
+    .message__edited-status {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 }
 @media (hover: hover) {

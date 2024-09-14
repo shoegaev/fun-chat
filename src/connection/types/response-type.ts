@@ -93,8 +93,18 @@ export interface MessageDeleteRes extends ServerRes {
     message: {
       id: string;
       status: {
-        isDeleted: boolean,
-      }
+        isDeleted: boolean;
+      };
+    };
+  };
+}
+
+export interface MessageEditRes extends ServerRes {
+  type: ResType.messageEdit;
+  payload: {
+    message: {
+      id: string;
+      text: string;
     };
   };
 }
@@ -110,4 +120,5 @@ export type SomeServerResponse =
   | MessageHistoryRes
   | MessageReadRes
   | MessageDeliverRes
-  | MessageDeleteRes;
+  | MessageDeleteRes
+  | MessageEditRes;

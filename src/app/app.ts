@@ -93,14 +93,14 @@ export class App {
         page: Pages.login,
         callback: () => {
           this.setPage(Pages.login);
-          this.appView.mainView.loginPageView.setKeyDownEvent()
+          this.appView.mainView.loginPageView.setKeyDownEvent();
           if (this.connection.isUserAuthorized()) {
             this.connection.sender.logaut();
           }
         },
-        exitCallback: ()=>{
-          this.appView.mainView.loginPageView.removeKeyDownEvent()
-        }
+        exitCallback: () => {
+          this.appView.mainView.loginPageView.removeKeyDownEvent();
+        },
       },
       {
         hasResource: false,
@@ -132,6 +132,17 @@ export class App {
           this.router.navigate({ page: Pages.login });
           return;
         }
+        if (
+          messengerInterfaceView.getCurrentMessageHistoriView() &&
+          messengerInterfaceView.messageInputField.isEditModeEnable()
+        ) {
+          messengerInterfaceView.messageInputField.showModalWindowOnEditModExit(
+            () => {
+              this.router.navigate({ page: Pages.index, resource: resource });
+            },
+          );
+          return;
+        }
         this.setPage(Pages.index);
         if (resource) {
           const userView = userListView.findUser(resource);
@@ -139,9 +150,8 @@ export class App {
             messengerInterfaceView.openMessageHistory(resource);
             userView.setSelectedStatus();
             messengerInterfaceView.messageInputField.activateField();
-            messengerInterfaceView.messageInputField.clearTextArea();
           } else {
-            this.router.navigate({ page: Pages.login });
+            this.router.navigate({ page: Pages.index });
           }
         } else {
           userListView.users.selectedUser?.removeSelectedStatus();
@@ -149,6 +159,8 @@ export class App {
           messengerInterfaceView.messageInputField.disableField();
           return;
         }
+        messengerInterfaceView.messageInputField.clearTextArea();
+        messengerInterfaceView.messageInputField.disableEditMode();
       },
     };
     return route;

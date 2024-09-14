@@ -59,6 +59,7 @@ export class ServerCallbacksCreator {
     this.createMessageCallbacks();
     this.createMessageStatusCallback();
     this.createMessageDeleteCallback();
+    this.createMessageEditCallback();
   }
 
   private getCurrentMessageHistoriView(): MessageHistoryView | null {
@@ -282,6 +283,22 @@ export class ServerCallbacksCreator {
           messageHistory?.removeUnreadMessages();
           const user = this.userListView.findUser(message.data.from);
           user?.removeUnreadMessages();
+        }
+      },
+    });
+  }
+
+  private createMessageEditCallback(): void {
+    this.serverCallbacks.push({
+      type: ResType.messageEdit,
+      callback: (id: string, text: string) => {
+        const messageHistory = this.getCurrentMessageHistoriView();
+        if (!messageHistory) {
+          return;
+        }
+        const message = messageHistory.findMessage(id);
+        if (message) {
+          message.view.editText(text);
         }
       },
     });
