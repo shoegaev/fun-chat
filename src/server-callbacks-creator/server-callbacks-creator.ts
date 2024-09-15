@@ -196,11 +196,14 @@ export class ServerCallbacksCreator {
             addNewMessagesLine();
             if (messageData.from === this.connection.authorizedUser[0]?.login) {
               this.getCurrentMessageHistoriView()?.onMessageSend();
+            } else if (
+              messageData.from === this.getCurrentMessageHistoriView()?.login
+            ) {
+              this.getCurrentMessageHistoriView()?.addUnreadMessages();
             }
           }
           if (messageData.to === this.connection.authorizedUser[0]?.login) {
             this.userListView.findUser(messageData.from)?.addUnreadMessage();
-            this.getCurrentMessageHistoriView()?.addUnreadMessages();
           }
         },
       },
