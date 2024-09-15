@@ -50,7 +50,7 @@ export class LoginPageView extends View {
       {
         tag: "h2",
         cssClasses: ["form__heading"],
-        textContent: "Login",
+        textContent: "Authentication",
         target: ".login-page__form",
       },
       {
@@ -129,13 +129,17 @@ export class LoginPageView extends View {
 
   private createLoginInputField() {
     const inputFieldParams: InputFieldParams = {
-      labelText: "Login",
+      placeholder: "Login",
       inputType: "text",
       cssClasses: ["form__login-input-field"],
       paramsForValidation: [
         {
-          paramName: "Minimal length 3 letters",
+          paramName: "Minimal length 3 symbols",
           callback: (text: string) => text.length >= 3,
+        },
+        {
+          paramName: "Maximal length 20 symbols",
+          callback: (text: string) => text.length <= 20,
         },
         {
           paramName: "Only latin letters and numbers",
@@ -148,6 +152,7 @@ export class LoginPageView extends View {
             return true;
           },
         },
+
       ],
       inputEventCallbacks: [this.changeButtonStatus.bind(this)],
     };
@@ -158,7 +163,7 @@ export class LoginPageView extends View {
 
   private createPasswordInputField() {
     const inputFieldParams: InputFieldParams = {
-      labelText: "Password",
+      placeholder: "Password",
       inputType: "password",
       cssClasses: ["form__password-input-field"],
       paramsForValidation: [

@@ -4,12 +4,8 @@
   flex-direction: column;
   gap: 5px;
 }
-.input-field__label {
-  width: 100%;
-  display: grid;
-  gap: 5px;
-  grid-template-columns: 0.4fr 0.9fr 0.2fr;
-  text-align: center;
+.input-field__input{
+  font-size: 1em;
 }
 .input-field__criteria {
   display: flex;
@@ -21,13 +17,14 @@
   display: grid;
   width: 100%;
   gap: 5px;
-  grid-template-columns: 0.4fr 0.9fr 0.2fr;
+  grid-template-columns: 0.1fr 0.8fr 0.1fr;
   .criterium__dot {
-    text-align: center;
+    text-align: left;
     transition: opacity 0.2s ease;
   }
   .criterium__text {
     transition: opacity 0.2s ease;
+    font-size: 0.8em;
   }
   .criterium__status {
     justify-self: center;

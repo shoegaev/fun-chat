@@ -7,7 +7,7 @@ import "./input-field-style.scss";
 import tickIcon from "../../../../../public/assets/icons/tick-icon.svg";
 
 export interface InputFieldParams {
-  labelText: string;
+  placeholder: string;
   inputType: "text" | "password";
   paramsForValidation: {
     paramName: string;
@@ -46,18 +46,16 @@ export class InputFieldView extends View {
   private configureView(): void {
     const innerElementsParams: ElementParametrs[] = [
       {
-        tag: "label",
-        cssClasses: ["input-field__label"],
-        textContent: this.params.labelText,
-      },
-      {
         tag: "input",
         cssClasses: ["input-field__input"],
-        target: ".input-field__label",
         atributes: [
           {
             name: "type",
             value: this.params.inputType,
+          },
+          {
+            name: "placeholder",
+            value: this.params.placeholder,
           },
         ],
       },
@@ -129,7 +127,7 @@ export class InputFieldView extends View {
     index: number,
   ): void {
     const eventHandler = () => {
-      if (this.input && callback(this.input?.value)) {
+      if (this.input && callback(this.input?.value) && this.input.value) {
         criterium.classList.add("input-field__criterium_passed");
         this.criteriaStatuses[index] = true;
       } else {
@@ -140,7 +138,6 @@ export class InputFieldView extends View {
     this.input?.addEventListener("input", () => {
       eventHandler();
     });
-    eventHandler();
   }
 
   public isCurrentValueValid(): boolean {
