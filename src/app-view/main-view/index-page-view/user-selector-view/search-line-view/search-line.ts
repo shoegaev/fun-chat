@@ -6,7 +6,7 @@ import {
 import "./search-line-style.scss";
 import { UserListView } from "../user-list-view/user-list-view";
 import magnifierIcon from "../../../../../../public/assets/icons/magnifying-glass.svg";
-import crossIcon from "../../../../../../public/assets/icons/cross-icon.svg";
+import crossIcon from "../../../../../../public/assets/icons/cross-icon-dark.svg";
 
 export class SearchLineView extends View {
   private userListView: UserListView;

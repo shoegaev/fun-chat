@@ -50,11 +50,24 @@
   border-bottom: $border-interfaceBorder;
 }
 .message-history__close-button {
-  width: 20px;
-  height: 20px;
-  background-color: red;
+  width: 30px;
+  height: 30px;
+  border-radius: $interfaceBorderRadius;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s ease;
+  img {
+    width: 75%;
+  }
 }
+@media (hover: hover) {
+  .message-history__close-button:hover {
+    background-color: $color-interfaceBackgroundHovered;
+  }
+}
+
 .message-history__list {
   width: calc(100% - 5px);
   height: 90%;

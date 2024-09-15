@@ -9,6 +9,7 @@ import { MessageView, MessageStatus } from "./message-view/message-view";
 import { MessageData } from "../../../../../connection/types/message-data-type";
 import "./message-history-style.scss";
 import downIcon from "../../../../../../public/assets/icons/down-icon.svg";
+import crosIcon from "../../../../../../public/assets/icons/cross-icon.svg";
 
 type Message = { data: MessageData; view: MessageView };
 
@@ -218,6 +219,12 @@ export class MessageHistoryView extends View {
       tag: "div",
       cssClasses: ["message-history__close-button"],
     });
+    const closeButtonIcon = new ElementCreator({
+      tag: "img",
+      cssClasses: ["message-history__close-button-icon"],
+      atributes: [{ name: "src", value: crosIcon }],
+    });
+    closeButton.apendInnerElements(closeButtonIcon);
     header.apendInnerElements(userLogin, closeButton);
     const messageList = new ElementCreator({
       tag: "div",
