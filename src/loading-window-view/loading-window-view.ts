@@ -1,13 +1,18 @@
 import { View } from "../util/view";
-import { ElementParametrs } from "../util/element-creator";
+import { ElementCreator, ElementParametrs } from "../util/element-creator";
 import "./loading-window-style.scss";
+import errorIcon from "../../public/assets/icons/error-icon.svg";
 
 export class LoadingWindowView extends View {
   private defaultState: { heading: string; message: string };
 
-  private heading: HTMLElement;
+  private readonly contentContainer: HTMLElement;
 
-  private message: HTMLElement;
+  private readonly heading: HTMLElement;
+
+  private readonly message: HTMLElement;
+
+  private readonly closeButton: HTMLElement;
 
   constructor() {
     const LOADING_WINDOW_PARAMS: ElementParametrs = {
@@ -16,101 +21,9 @@ export class LoadingWindowView extends View {
     };
     super(LOADING_WINDOW_PARAMS);
     this.defaultState = { heading: "Connecting...", message: "Please wait" };
-    this.configureView();
-    [this.heading, this.message] = this.assignProperties();
-  }
-
-  private configureView(): void {
-    const innerElementsParams: ElementParametrs[] = [
-      {
-        tag: "div",
-        cssClasses: ["loading-window__content"],
-      },
-      {
-        tag: "div",
-        cssClasses: ["loading-window__close-button"],
-        target: ".loading-window__content",
-      },
-      {
-        tag: "div",
-        cssClasses: ["close-button__stick"],
-        target: ".loading-window__close-button",
-        quantity: 2,
-      },
-      {
-        tag: "span",
-        cssClasses: ["loading-window__heading"],
-        textContent: this.defaultState.heading,
-        target: ".loading-window__content",
-      },
-      {
-        tag: "span",
-        cssClasses: ["loading-window__message"],
-        textContent: this.defaultState.message,
-        target: ".loading-window__content",
-      },
-    ];
-    innerElementsParams.push(...this.createLoadingBarParams(), {
-      tag: "div",
-      cssClasses: ["loading-window__fail-icon"],
-      textContent: "fail-icon",
-      target: ".loading-window__content",
-    });
-    this.addInnerElements(innerElementsParams);
+    [this.contentContainer, this.heading, this.message, this.closeButton] =
+      this.configureView();
     this.closeButtonOnClick();
-  }
-
-  private createLoadingBarParams(): ElementParametrs[] {
-    const loadingBarParams: ElementParametrs[] = [
-      {
-        tag: "div",
-        cssClasses: ["loading-window__loading-bar"],
-        target: ".loading-window__content",
-      },
-    ];
-    for (let i = 1; i <= 12; i += 1) {
-      loadingBarParams.push(
-        {
-          tag: "div",
-          cssClasses: ["loading-bar__stick"],
-          target: ".loading-window__loading-bar",
-        },
-        {
-          tag: "div",
-          cssClasses: ["loading-bar__stick-visible"],
-          target: `.loading-bar__stick:nth-child(${i})`,
-        },
-      );
-    }
-    return loadingBarParams;
-  }
-
-  private closeButtonOnClick(): void {
-    const button = this.getHtmlElement().querySelector(
-      ".loading-window__close-button",
-    );
-    button?.addEventListener("click", () => {
-      this.hide();
-      setTimeout(() => {
-        this.restoreDefaultState();
-      }, 200);
-    });
-  }
-
-  private assignProperties(): HTMLElement[] {
-    const heading = this.getHtmlElement().querySelector(
-      ".loading-window__heading",
-    );
-    const message = this.getHtmlElement().querySelector(
-      ".loading-window__message",
-    );
-    if (
-      !(heading instanceof HTMLElement) ||
-      !(message instanceof HTMLElement)
-    ) {
-      throw new Error();
-    }
-    return [heading, message];
   }
 
   public show(): void {
@@ -135,6 +48,14 @@ export class LoadingWindowView extends View {
     this.restoreLoadig();
   }
 
+  public hideCloseButton(): void {
+    this.closeButton.remove();
+  }
+
+  public showCloseButton(): void {
+    this.contentContainer.prepend(this.closeButton);
+  }
+
   private setMessage(errMessage: string): void {
     this.message.textContent = errMessage;
   }
@@ -145,5 +66,82 @@ export class LoadingWindowView extends View {
 
   private restoreLoadig() {
     this.getHtmlElement().classList.remove("loading-stoped");
+  }
+
+  private configureView(): HTMLElement[] {
+    const container = new ElementCreator({
+      tag: "div",
+      cssClasses: ["loading-window__content"],
+    });
+    const closeButton = new ElementCreator({
+      tag: "div",
+      cssClasses: ["loading-window__close-button"],
+    });
+    for (let i = 0; i < 2; i++) {
+      const closeButtonStick = new ElementCreator({
+        tag: "div",
+        cssClasses: ["close-button__stick"],
+      });
+      closeButton.apendInnerElements(closeButtonStick);
+    }
+    const heading = new ElementCreator({
+      tag: "span",
+      cssClasses: ["loading-window__heading"],
+      textContent: this.defaultState.heading,
+    });
+    const text = new ElementCreator({
+      tag: "span",
+      cssClasses: ["loading-window__message"],
+      textContent: this.defaultState.message,
+    });
+    const loadingBar = this.createLoadingBar();
+    const errorIconEl = new ElementCreator({
+      tag: "img",
+      cssClasses: ["loading-window__error-icon"],
+      atributes: [{ name: "src", value: errorIcon }],
+    });
+    container.apendInnerElements(
+      closeButton,
+      heading,
+      text,
+      loadingBar,
+      errorIconEl,
+    );
+    this.viewCreator.apendInnerElements(container);
+    return [
+      container.getElement(),
+      heading.getElement(),
+      text.getElement(),
+      closeButton.getElement(),
+    ];
+  }
+
+  private createLoadingBar(): HTMLElement {
+    const loadingBar = new ElementCreator({
+      tag: "div",
+      cssClasses: ["loading-window__loading-bar"],
+    });
+    for (let i = 1; i <= 12; i += 1) {
+      const stick = new ElementCreator({
+        tag: "div",
+        cssClasses: ["loading-bar__stick"],
+      });
+      const stickVisible = new ElementCreator({
+        tag: "div",
+        cssClasses: ["loading-bar__stick-visible"],
+      });
+      stick.apendInnerElements(stickVisible);
+      loadingBar.apendInnerElements(stick);
+    }
+    return loadingBar.getElement();
+  }
+
+  private closeButtonOnClick(): void {
+    this.closeButton.addEventListener("click", () => {
+      this.hide();
+      setTimeout(() => {
+        this.restoreDefaultState();
+      }, 200);
+    });
   }
 }

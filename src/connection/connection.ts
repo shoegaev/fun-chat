@@ -56,6 +56,7 @@ export class Connection {
     const socket = new WebSocket(SERVER_URL);
     if (this.connectionAttempt === 1) {
       this.loadingWindow.show();
+      this.loadingWindow.hideCloseButton();
     }
     socket.addEventListener("open", () => {
       this.connectionAttempt = 1;
@@ -63,6 +64,7 @@ export class Connection {
       this.configureSocket(socket);
       setTimeout(() => {
         this.loadingWindow.hide();
+        this.loadingWindow.showCloseButton();
       }, 300);
     });
     socket.addEventListener("error", () => {
@@ -71,9 +73,9 @@ export class Connection {
         if (this.connectionAttempt <= 6) {
           this.startConnection();
         } else {
-          // -------------------------
-          // some error handling logic
-          // -------------------------
+          this.loadingWindow.error(
+            "Failed to connect, check your connection and reload page",
+          );
         }
       }, 500);
     });

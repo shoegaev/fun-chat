@@ -105,7 +105,9 @@ export class ServerCallbacksCreator {
       this.serverErrCallbacks.push({
         error: message,
         callback: () => {
-          this.loadingWindowView.error(message);
+          this.loadingWindowView.error(
+            `${message[0].toUpperCase()}${message.slice(1)}`,
+          );
         },
       });
     });
