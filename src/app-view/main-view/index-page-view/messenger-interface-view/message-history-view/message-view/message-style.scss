@@ -2,21 +2,26 @@
 
 .message {
   display: flex;
-  gap: 3px;
+  flex-direction: column;
+  gap: 5px;
   position: relative;
-  margin-top: 20px;
+  width: fit-content;
+  max-width: 70%;
 
   .message__user-name {
-    width: 50px;
+    display: none;
   }
   .message__message-container {
     min-width: 210px;
-    max-width: calc(100% - 50px);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-radius: $interfaceBorderRadius;
+    background-color: rgba($color-headerBackground, 0.6);
+    padding: 5px;
     .message__header {
-      padding: 0 5px;
-      position: absolute;
-      top: -20px;
+      top: 3px;
       right: 0;
       display: flex;
       justify-content: space-between;
@@ -50,17 +55,12 @@
       }
     }
     .message__text {
-      padding: 4px 4px 25px 4px;
-      border-radius: $interfaceBorderRadius;
-      background-color: rgba($color-headerBackground, 0.6);
       word-break: break-word;
     }
     .message__message-footer {
       width: 100%;
-      position: absolute;
       left: 0;
       bottom: 0;
-      padding: 0 5px 5px 5px;
       font-size: 0.7em;
       opacity: 0.6;
       display: flex;
@@ -75,17 +75,27 @@
   @media (hover: hover) {
     .message__edit-button:hover,
     .message__delete-button:hover {
-      background-color: $color-interfaceBackgroundHovered;
+      opacity: 0.4;
     }
   }
 }
 .message.message_incoming {
-  .message__status {
-    opacity: 0;
-    visibility: hidden;
+  align-self: flex-end;
+  .message__user-name {
+    display: block;
+    align-self: flex-end;
+    text-align: end;
   }
-  .message__text {
+  .message__message-container {
+    .message__header {
+      display: none;
+    }
     background-color: $color-interfaceBackgroundHovered;
+  }
+}
+.message.message_incoming + .message.message_incoming {
+  .message__user-name {
+    display: none;
   }
 }
 .message.message_edited {
@@ -98,7 +108,6 @@
 }
 @media (hover: hover) {
   .message:not(.message.message_incoming):hover {
-    .message__status,
     .message__edit-button,
     .message__delete-button {
       opacity: 1;
@@ -106,3 +115,28 @@
     }
   }
 }
+@media (hover: none) {
+  .message:not(.message.message_incoming) {
+    .message__message-container {
+      .message__header {
+        .message__edit-button,
+        .message__delete-button {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .message {
+    max-width: 80%;
+  }
+}
+@media (max-width: 1000px) {
+  .message {
+    max-width: 95%;
+  }
+}
+

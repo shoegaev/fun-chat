@@ -80,6 +80,7 @@ export class MessageHistoryView extends View {
       ["message-history__message"],
       this.connection,
       {
+        from: data.from,
         incoming: this.connection.authorizedUser[0]?.login === data.to,
         datetime: data.datetime,
         status: status,

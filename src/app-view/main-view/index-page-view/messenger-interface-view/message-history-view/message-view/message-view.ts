@@ -15,6 +15,7 @@ export enum MessageStatus {
 }
 
 export interface MessageParams {
+  from: string;
   incoming: boolean;
   datetime: number;
   status: MessageStatus;
@@ -96,7 +97,7 @@ export class MessageView extends View {
     const userName = new ElementCreator({
       tag: "div",
       cssClasses: ["message__user-name"],
-      textContent: this.params.incoming ? "other" : "you",
+      textContent: this.params.from,
     });
     const messageContainer = new ElementCreator({
       tag: "div",
