@@ -66,6 +66,14 @@ export default (env: EnvVariable) => {
             "sass-loader",
           ],
         },
+        {
+          test: /\.(mkv)$/i,
+          use: [
+            {
+              loader: "file-loader",
+            },
+          ],
+        },
       ],
     },
     resolve: {

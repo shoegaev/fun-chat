@@ -1,0 +1,29 @@
+@import "../../../../../variables.scss";
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.pagination__button {
+  cursor: pointer;
+}
+.pagination__numbers-container {
+  display: flex;
+  gap: 5px;
+  .pagination__number-button {
+    padding: 5px;
+    min-width: 25px;
+    min-height: 25px;
+    text-align: center;
+    transition: border 0.2s ease, backgroundColor 0.2s ease;
+    border-radius: $interfaceBorderRadius;
+  }
+  .pagination__number-button_active {
+    border: $border-interfaceBorder;
+  }
+}
+@media (hover: hover) {
+  .pagination__number-button:hover {
+    background-color: $color-interfaceBackgroundHovered;
+  }
+}
