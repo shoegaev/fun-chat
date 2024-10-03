@@ -5,6 +5,8 @@ import { Connection } from "../../connection/connection";
 import { NavButtonView } from "./nav-button-view/nav-button-view";
 import { UserSelectorView } from "../main-view/index-page-view/user-selector-view/user-selector-view";
 import { ModalWindowView } from "../modal-window-view/modal-window-view";
+import { State } from "../../state/state";
+import { StateFieldsKeys } from "../../state/fields-types";
 import "./header-style.scss";
 import logautIcon from "../../../public/assets/icons/logout-icon.svg";
 import userIcon from "../../../public/assets/icons/user-icon.svg";
@@ -36,6 +38,7 @@ export class HeaderView extends View {
     connection: Connection,
     userSelector: UserSelectorView,
     modalWindow: ModalWindowView,
+    state: State,
   ) {
     const HEADER_PARAMS: ElementParametrs = {
       tag: "header",
@@ -50,7 +53,7 @@ export class HeaderView extends View {
       this.userLogin,
       this.logoutButton,
       this.menuButtons,
-    ] = this.configureView(router);
+    ] = this.configureView(router, state);
     this.addEventListeners(connection, userSelector, modalWindow);
   }
 
@@ -94,6 +97,7 @@ export class HeaderView extends View {
   // eslint-disable-next-line max-lines-per-function
   private configureView(
     router: Router,
+    state: State,
   ): [HTMLElement, HTMLElement, HTMLElement, HTMLElement, MenuButtons] {
     const [userPanel, userLogin, logautButton] = this.createUserPanel();
     const navigation = new ElementCreator({
@@ -114,7 +118,17 @@ export class HeaderView extends View {
         if (this.connection.isUserAuthorized()) {
           this.showUserListButton();
         }
-        router.navigate({ page: Pages.index });
+        const openedMessageHistory = state.getField(
+          StateFieldsKeys.openedMsgHistory,
+        );
+        if (openedMessageHistory) {
+          router.navigate({
+            page: Pages.index,
+            resource: openedMessageHistory,
+          });
+        } else {
+          router.navigate({ page: Pages.index });
+        }
       },
       buttons: this.buttons,
     });

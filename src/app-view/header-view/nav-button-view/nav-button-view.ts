@@ -32,6 +32,9 @@ export class NavButtonView extends View {
       },
     ]);
     this.getHtmlElement().addEventListener("click", () => {
+      if (this.getHtmlElement().classList.contains("nav-button_selected")) {
+        return;
+      }
       this.setSelectedCLass();
       this.params.callback();
     });

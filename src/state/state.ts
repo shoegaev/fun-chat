@@ -1,4 +1,10 @@
-import { StateFields, StateFieldsKeys, StateField } from "./fields-types";
+import {
+  StateFields,
+  StateFieldsKeys,
+  StateField,
+  MsgHistoryScrollStateField,
+  OpenedMsgHistoryStateField,
+} from "./fields-types";
 
 export class State {
   public readonly stateFields: StateFields;
@@ -17,16 +23,17 @@ export class State {
   }
 
   public setField(field: StateField) {
-    const setMsgHistoryScrollResult = this.setMsgHistoryScroll(field);
-    if (setMsgHistoryScrollResult) {
-      return;
+    switch (field.name) {
+      case StateFieldsKeys.msgHistoryScroll:
+        this.setMsgHistoryScroll(field);
+        break;
+      case StateFieldsKeys.openedMsgHistory:
+        this.setOpenedMessageHistory(field);
+        break;
     }
   }
 
-  private setMsgHistoryScroll(field: StateField): boolean {
-    if (field.name !== StateFieldsKeys.msgHistoryScroll) {
-      return false;
-    }
+  private setMsgHistoryScroll(field: MsgHistoryScrollStateField): void {
     let scrollField = this.stateFields[StateFieldsKeys.msgHistoryScroll];
     if (!scrollField) {
       scrollField = {};
@@ -35,6 +42,9 @@ export class State {
     Object.keys(field.value).forEach((key) => {
       scrollField[key] = field.value[key];
     });
-    return true;
+  }
+
+  private setOpenedMessageHistory(field: OpenedMsgHistoryStateField): void {
+    this.stateFields[StateFieldsKeys.openedMsgHistory] = field.value;
   }
 }

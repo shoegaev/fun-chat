@@ -5,6 +5,7 @@ import {
 } from "../connection/types/server-callbacks-types";
 import { Router, Route, Pages } from "../router/router";
 import { State } from "../state/state";
+import { StateFieldsKeys } from "../state/fields-types";
 import { AppView } from "../app-view/app-view";
 import { ServerCallbacksCreator } from "../server-callbacks-creator/server-callbacks-creator";
 import { LoadingWindowView } from "../loading-window-view/loading-window-view";
@@ -66,7 +67,7 @@ export class App {
       this.serverErrCallbacks,
     );
     const router = new Router(this.getRoutes());
-    const view = new AppView(connection, router);
+    const view = new AppView(connection, router, state);
     document.body.append(
       view.getHtmlElement(),
       loadingWindowView.getHtmlElement(),
@@ -150,6 +151,10 @@ export class App {
             messengerInterfaceView.openMessageHistory(resource);
             userView.setSelectedStatus();
             messengerInterfaceView.messageInputField.activateField();
+            this.state.setField({
+              name: StateFieldsKeys.openedMsgHistory,
+              value: resource,
+            });
           } else {
             this.router.navigate({ page: Pages.index });
           }
