@@ -33,6 +33,10 @@ export class State {
     }
   }
 
+  public removeField(fieldName: StateFieldsKeys): void {
+    delete this.stateFields[fieldName];
+  }
+
   private setMsgHistoryScroll(field: MsgHistoryScrollStateField): void {
     let scrollField = this.stateFields[StateFieldsKeys.msgHistoryScroll];
     if (!scrollField) {

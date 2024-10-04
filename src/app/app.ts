@@ -162,6 +162,7 @@ export class App {
           userListView.users.selectedUser?.removeSelectedStatus();
           messengerInterfaceView.closeMessageHistory();
           messengerInterfaceView.messageInputField.disableField();
+          this.state.removeField(StateFieldsKeys.openedMsgHistory);
           return;
         }
         messengerInterfaceView.messageInputField.clearTextArea();
